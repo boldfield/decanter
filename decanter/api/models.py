@@ -13,7 +13,7 @@ db = SQLAlchemy(app)
 
 class DecanterBaseModel(AbstractConcreteBase, db.Model, SerializationMixin):
 
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.BigInteger, primary_key=True)
     created = db.Column(db.DateTime)
     modified = db.Column(db.DateTime)
 
@@ -31,8 +31,8 @@ class DecanterBaseModel(AbstractConcreteBase, db.Model, SerializationMixin):
 
 roles_users = db.Table('roles_users',
                        DecanterBaseModel.metadata,
-                       db.Column('user_id', db.Integer, db.ForeignKey('user.id')),
-                       db.Column('role_id', db.Integer, db.ForeignKey('role.id'))
+                       db.Column('user_id', db.BigInteger, db.ForeignKey('user.id')),
+                       db.Column('role_id', db.BigInteger, db.ForeignKey('role.id'))
               )
 
 
@@ -93,7 +93,7 @@ class User(db.Model, UserMixin, SerializationMixin):
 class Post(DecanterBaseModel, RoleMixin):
     __tablename__ = 'post'
 
-    parent = db.Column(db.Integer, db.ForeignKey('comment.id'), nullable=True)
+    parent = db.Column(db.BigInteger, db.ForeignKey('comment.id'), nullable=True)
 
     author = db.Column(db.BigInteger, db.ForeignKey('user.id'), index=True)
     content = db.Column(db.Text, nullable=False)
@@ -108,8 +108,8 @@ class Post(DecanterBaseModel, RoleMixin):
 class Comment(DecanterBaseModel, RoleMixin):
     __tablename__ = 'comment'
 
-    post = db.Column(db.Integer, db.ForeignKey('post.id'), index=True)
-    parent = db.Column(db.Integer, db.ForeignKey('comment.id'), nullable=True)
+    post = db.Column(db.BigInteger, db.ForeignKey('post.id'), index=True)
+    parent = db.Column(db.BigInteger, db.ForeignKey('comment.id'), nullable=True)
 
     author = db.Column(db.BigInteger, db.ForeignKey('user.id'), index=True)
     content = db.Column(db.Text)
@@ -124,7 +124,7 @@ class CommentRating(DecanterBaseModel, RoleMixin):
     __tablename__ = 'comment_rating'
 
     rater = db.Column(db.BigInteger, db.ForeignKey('user.id'), index=True)
-    rating = db.Column(db.Integer, nullable=False)
+    rating = db.Column(db.BigInteger, nullable=False)
     comment_id = db.Column(db.BigInteger, db.ForeignKey('comment.id'), index=True)
     comment = db.relationship('Comment', backref='ratings')
 
@@ -133,7 +133,7 @@ class PostRating(DecanterBaseModel, RoleMixin):
     __tablename__ = 'post_rating'
 
     rater = db.Column(db.BigInteger, db.ForeignKey('user.id'), index=True)
-    rating = db.Column(db.Integer, nullable=False)
+    rating = db.Column(db.BigInteger, nullable=False)
     post_id = db.Column(db.BigInteger, db.ForeignKey('post.id'), index=True)
     post = db.relationship('Post', backref='ratings')
 
