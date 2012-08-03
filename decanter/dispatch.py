@@ -1,9 +1,11 @@
 from threading import Lock
+from decanter import settings
+
 
 class SubdomainDispatcher(object):
 
     def __init__(self, create_app):
-        self.domain = 'optionminder.com'
+        self.domain = settings.DOMAIN
         self.create_app = create_app
         self.lock = Lock()
         self.instances = {}
