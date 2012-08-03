@@ -20,7 +20,9 @@ install_requires = [
     'Flask==0.9',
     'Flask-SQLAlchemy==0.16',
     'Flask-Testing==0.3',
+    'Flask-Security==1.2.3',
     'SQLAlchemy==0.7.8',
+    'pytz==2012d',
 ]
 
 tests_require = [
