@@ -93,7 +93,7 @@ class User(db.Model, UserMixin, SerializationMixin):
 class Post(DecanterBaseModel, RoleMixin):
     __tablename__ = 'post'
 
-    parent = db.Column(db.BigInteger, db.ForeignKey('comment.id'), nullable=True)
+    parent = db.Column(db.BigInteger, db.ForeignKey('post.id'), nullable=True)
 
     author = db.Column(db.BigInteger, db.ForeignKey('user.id'), index=True)
     content = db.Column(db.Text, nullable=False)
