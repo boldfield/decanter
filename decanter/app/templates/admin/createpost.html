@@ -1,0 +1,12 @@
+{% extends 'admin/master.html' %}
+{% from 'admin/_formhelper.html' import render_field %}
+{% block body %}
+<form action="/admin/posts/create/" method="POST">
+  <dl>
+    {{ render_field(form.title) }}
+    {{ render_field(form.slug) }}
+    {{ render_field(form.content, cols="10", rows="20") }}
+  </dl>
+  <p><input type="submit" value="Save">
+</form>
+{% endblock %}

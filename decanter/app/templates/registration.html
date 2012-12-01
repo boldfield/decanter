@@ -1,0 +1,10 @@
+<form action="{{ url_for('authentication_handler.register_write') }}" method="POST">
+    {{ form.hidden_tag() }}
+    {{ form.username.label }} {{ form.username }}<br/>
+    {{ form.password_1.label }} {{ form.password_1 }}<br/>
+    {{ form.password_2.label }} {{ form.password_2 }}<br/>
+    {{ form.email.label }} {{ form.email }}<br/>
+    {{ form.next }}
+    {{ form.submit }}
+    <input type="submit" value="Submit">
+</form>

@@ -1,0 +1,20 @@
+<!doctype html>
+<head>
+  <title>Test Site</title>
+  <meta http-equiv="Content-type" content="text/html; charset=utf-8"/>
+</head>
+<body>
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <ul class=flashes>
+    {% for message in messages %}
+      <li>{{ message }}</li>
+    {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %}
+{% block content %}
+  <h1>Hello World! From base.html</h1>
+{% endblock content %}
+</body>
+</html>
