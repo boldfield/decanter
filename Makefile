@@ -1,16 +1,34 @@
-.DEFAULT_GOAL := dev
+# Magical make incantations...
+.DEFAULT_GOAL := all
 
-.PHONY: clean dev install tests
+.PHONY: assets build clean deps dist run
+
+
+REV=$(shell git rev-parse --short HEAD)
+TIMESTAMP=$(shell date +'%s')
+RUN=foreman run
+SETUP=$(RUN) python setup.py
+MANAGE=$(RUN) python manage.py
+
+
+all: deps assets
+
+assets:
+	@$(MANAGE) assets rebuild
+
+build: clean assets
+	@$(SETUP) build
 
 clean:
-	@@find . -type f -name "*$py.class" | grep -E '\./tests' | xargs rm
-	@echo "Cleaned."
+	@find . -name "*.py[co]" -exec rm -rf {} \;
+	@$(SETUP) clean
+	@rm -rf dist build
 
-dev:
-	python setup.py dev
+deps:
+	@$(SETUP) dev
 
-install:
-	python setup.py install
+dist: clean assets
+	@$(SETUP) sdist
 
-tests:
-	nosetests -v
+run:
+	@foreman start -f Procfile.dev
