@@ -26,10 +26,12 @@ else:
 version = '0.0.1'
 
 install_requires = [
+    'pytz==2012d',
     'PyYAML==3.10',
+    'cement==2.0.2',
     'gunicorn==0.14.6',
     'yuicompressor==2.4.7',
-    'itsdangerour==0.17',
+    'itsdangerous==0.17',
     'flask==0.9',
     'flask-sqlalchemy==0.16',
     'flask-script==0.3.3',
