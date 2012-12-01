@@ -8,8 +8,8 @@ def create_app():
     return app
 
 def register_blueprints(app):
-    from decanter.api.handlers import (post_handler,
-                                       comment_handler)
+    from decanter.api.handlers import post_handler
+    #                                  comment_handler)
 
     app.register_blueprint(post_handler)
-    app.register_blueprint(comment_handler)
+    #app.register_blueprint(comment_handler)
