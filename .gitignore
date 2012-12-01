@@ -25,3 +25,16 @@ pip-log.txt
 
 #Mr Developer
 .mr.developer.cfg
+
+# Development environment
+.env
+.env.*
+
+/local/
+
+.webassets-cache
+.webassets-manifest
+
+# Script build files
+decanter.js
+decanter.min.js

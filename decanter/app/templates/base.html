@@ -1,7 +1,7 @@
 <!doctype html>
 <head>
-  <title>Test Site</title>
   <meta http-equiv="Content-type" content="text/html; charset=utf-8"/>
+  <title>Test Site</title>
 </head>
 <body>
 {% with messages = get_flashed_messages() %}
@@ -16,5 +16,6 @@
 {% block content %}
   <h1>Hello World! From base.html</h1>
 {% endblock content %}
+<script src="{{ url_for('static', filename='script/decanter.js') }}"></script>
 </body>
 </html>

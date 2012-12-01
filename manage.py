@@ -1,7 +1,7 @@
 from cement.core import controller
 
-from decanter import cli
-from decanter import app
+from decanter import app, cli
+from decanter.app import create_app
 
 
 class RootController(cli.RootController):
@@ -64,6 +64,7 @@ class AssetController(cli.Controller):
 
     def run(self, *args):
         from webassets import script
+        app = create_app()
         script.main(args, env=app.assets)
 
 

@@ -1,5 +1,8 @@
 import os
 
+DIR = os.path.abspath(__file__)
+DIR = os.path.dirname(DIR)
+
 from werkzeug.exceptions import NotFound
 
 from decanter.dispatch import SubdomainDispatcher
@@ -7,9 +10,6 @@ from decanter.app import (create_app as create_web_app,
                           register_blueprints as register_om_blueprints)
 from decanter.api import (create_app as create_api_app,
                           register_blueprints as register_api_blueprints)
-
-DIR = os.path.abspath(__file__)
-DIR = os.path.dirname(DIR)
 
 # TODO : These should be in settings.
 SUPPORTED_SUBDOMAINS = ('api', 'www', '')

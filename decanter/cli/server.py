@@ -1,6 +1,7 @@
 import os
 import signal
 from cement.core import controller, exc
+from flask import Flask
 
 
 class ServerController(controller.CementBaseController):
@@ -28,10 +29,12 @@ class ServerController(controller.CementBaseController):
     def run(self, app, **kw):
         kw.setdefault('host', os.environ.get('HOST', '0.0.0.0'))
         kw.setdefault('port', int(os.environ.get('PORT', 5000)))
+        a = Flask(__name__)
+        a.wsgi_app = app
 
         while True:
             try:
-                app.run(**kw)
+                a.run(**kw)
             except exc.CaughtSignal, e:
                 if e.signum != signal.SIGHUP:
                     return

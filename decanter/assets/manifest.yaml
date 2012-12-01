@@ -1,0 +1,13 @@
+app-js:
+    output: ../app/static/script/decanter.js
+    filters: coffeescript
+    debug: False
+    contents:
+        - ../../assets/script/index.coffee
+
+app-js-min:
+    output: ../app/static/script/decanter.min.js
+    filters: uglifyjs
+    debug: False
+    contents:
+        - app-js

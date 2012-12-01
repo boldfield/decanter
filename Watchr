@@ -1,0 +1,9 @@
+# vim: ft=ruby
+
+watch('decanter/assets/script/.*\.coffee$') { |md|
+    system("foreman run python manage.py assets rebuild -b app-js")
+}
+
+watch('decanter/assets/manifest.yaml$') { |md|
+    system("foreman run python manage.py assets rebuild")
+}
