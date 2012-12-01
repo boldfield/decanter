@@ -1,8 +1,10 @@
 from threading import Lock
+
 from decanter import settings
+from decanter.util import LoginManagerMixin
 
 
-class SubdomainDispatcher(object):
+class SubdomainDispatcher(object, LoginManagerMixin):
 
     def __init__(self, create_app):
         self.domain = settings.DOMAIN
@@ -19,6 +21,7 @@ class SubdomainDispatcher(object):
             if app is None:
                 app = self.create_app(subdomain)
                 self.instances[subdomain] = app
+                self.setup_login_manager(app)
             return app
 
     def __call__(self, environ, start_response):
