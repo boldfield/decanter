@@ -212,6 +212,7 @@ class DC.admin.PostEditPage extends DC.Page
         success: @getPostSuccess,
         type: 'GET',
         url: endpoint
+        xhrFields: { withCredentials: true }
       })
     callback()
 

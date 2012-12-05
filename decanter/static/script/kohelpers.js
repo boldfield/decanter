@@ -459,7 +459,10 @@ kohelpers.form.Form = (function() {
         headers: headers,
         success: _this.onSuccess,
         type: _this.method,
-        url: endpoint
+        url: endpoint,
+        xhrFields: {
+          withCredentials: true
+        }
       });
     };
     if (!(this.saveDelay > -1)) {
@@ -781,7 +784,10 @@ kohelpers.model.Model = (function() {
         headers: headers,
         success: _this.onSuccess,
         type: 'PUT',
-        url: endpoint
+        url: endpoint,
+        xhrFields: {
+          withCredentials: true
+        }
       });
     };
     callback();
@@ -845,7 +851,7 @@ kohelpers.model.ModelContainer = (function() {
     headers = {};
     endpoint = this.endpoint;
     callback = function() {
-      return $.ajax({
+      return jQuery.ajax({
         context: _this,
         mimeType: 'application/json',
         contentType: 'application/json',
@@ -853,7 +859,10 @@ kohelpers.model.ModelContainer = (function() {
         headers: headers,
         success: _this.onSuccess,
         type: 'GET',
-        url: endpoint
+        url: endpoint,
+        xhrFields: {
+          withCredentials: true
+        }
       });
     };
     callback();

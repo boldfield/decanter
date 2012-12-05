@@ -219,6 +219,7 @@ class kohelpers.form.Form
         success: @onSuccess,
         type: @method,
         url: endpoint
+        xhrFields: { withCredentials: true }
       })
 
     callback() unless @saveDelay > -1

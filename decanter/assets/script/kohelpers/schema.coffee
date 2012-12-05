@@ -146,6 +146,7 @@ class kohelpers.model.Model
         success: @onSuccess,
         type: 'PUT',
         url: endpoint
+        xhrFields: { withCredentials: true }
       })
 
     callback()
@@ -194,7 +195,7 @@ class kohelpers.model.ModelContainer
     headers = {}
     endpoint = @endpoint
     callback = =>
-      $.ajax({
+      jQuery.ajax({
         context: this,
         mimeType: 'application/json',
         contentType: 'application/json',
@@ -203,6 +204,7 @@ class kohelpers.model.ModelContainer
         success: @onSuccess,
         type: 'GET'
         url: endpoint
+        xhrFields: { withCredentials: true }
       })
 
     callback()

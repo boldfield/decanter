@@ -15,6 +15,9 @@ STRIP_PATHS = ('api', 'admin')
 
 class Decanter(object, LoginManagerMixin):
     _strip_paths = STRIP_PATHS
+    xhr_allow_origin = list()
+    xhr_domains = os.environ.get('DECANTER_DOMAINS', '').split(',')
+    xhr_schema = ('http', 'https')
 
     def __init__(self,
                  default_app,
@@ -38,8 +41,11 @@ class Decanter(object, LoginManagerMixin):
 
         if admin_subdomain:
             self.subdomains[admin_subdomain] = create_web_app
+            self._add_xhr_origin_for_subdomain(admin_subdomain)
+
         if api_subdomain:
             self.subdomains[api_subdomain] = create_api_app
+            self._add_xhr_origin_for_subdomain(api_subdomain)
 
         self.paths[admin_prefix or 'admin'] = create_web_app
         self.paths[api_prefix or 'api'] = create_api_app
@@ -66,9 +72,16 @@ class Decanter(object, LoginManagerMixin):
 
         return app(environ, start_response)
 
+    def _add_xhr_origin_for_subdomain(self, subdomain):
+        for domain in self.xhr_domains:
+            for schema in self.xhr_schema:
+                origin = '%s://%s.%s' % (schema, subdomain, domain)
+                self.xhr_allow_origin.append(origin)
+
     def register_app(self, create_app, subdomain=None, path=None, strip_path=False):
         if subdomain:
             self.subdomains[subdomain] = create_app
+            self._add_xhr_origin_for_subdomain(subdomain)
         if path:
             self.paths[path] = create_app
         if strip_path:

@@ -13,6 +13,8 @@ class DC.Application
     @protocol = window.location.protocol unless @protocol
 
     @apiHost = config.apiHost or window.location.host
+    @crossDomain = @apiHost != window.location.host if @apiHost
+    @crossDomain = false unless @crossDomain
 
     @apiPathSegment = config.apiPathSegment
 

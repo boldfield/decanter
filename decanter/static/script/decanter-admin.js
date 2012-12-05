@@ -22,6 +22,12 @@ DC.Application = (function() {
       this.protocol = window.location.protocol;
     }
     this.apiHost = config.apiHost || window.location.host;
+    if (this.apiHost) {
+      this.crossDomain = this.apiHost !== window.location.host;
+    }
+    if (!this.crossDomain) {
+      this.crossDomain = false;
+    }
     this.apiPathSegment = config.apiPathSegment;
     this.apiRoot = "" + this.protocol + "//" + this.apiHost;
     if (this.apiPathSegment) {
@@ -456,7 +462,10 @@ DC.admin.PostEditPage = (function(_super) {
         headers: headers,
         success: _this.getPostSuccess,
         type: 'GET',
-        url: endpoint
+        url: endpoint,
+        xhrFields: {
+          withCredentials: true
+        }
       });
     };
     return callback();
