@@ -10,7 +10,7 @@ from decanter.app import create_app as create_web_app
 from decanter.api import create_app as create_api_app
 from decanter.util import LoginManagerMixin
 
-STRIP_PATHS = ('api',)
+STRIP_PATHS = ('api', 'admin')
 
 
 class Decanter(object, LoginManagerMixin):

@@ -23,8 +23,8 @@ def create_app():
 
 
 def register_blueprints(app):
-    app.register_blueprint(auth.plan, url_prefix='/admin')
-    app.register_blueprint(admin.plan, url_prefix='/admin')
+    app.register_blueprint(auth.plan)
+    app.register_blueprint(admin.plan)
 
 
 def register_assets(app):
