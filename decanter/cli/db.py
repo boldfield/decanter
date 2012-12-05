@@ -93,7 +93,7 @@ class CreateRoleController(controller.CementBaseController):
         sys.stdout.write('Role Description: ')
         description = raw_input().strip()
 
-        r = role.create(name, description)
+        role.create(name, description)
 
 
 class CreateUserController(controller.CementBaseController):
