@@ -24,8 +24,8 @@
 {% block init %}
   <script type="text/javascript">
     DC.Admin.init({
-      apiPathSegment: {{ api_path }}
-      apiHost: {{ api_host }}
+      apiPathSegment: {{ api_path|tojson|safe }}
+      apiHost: {{ api_host|tojson|safe }}
     })
   </script>
 
