@@ -9,8 +9,8 @@ from decanter.database.models.base import DecanterBaseModel
 
 # User/Group data modles
 roles_users = db.Table('roles_users',
-                       db.Column('user_id', db.Integer(), db.ForeignKey('role.id')),
-                       db.Column('role_id', db.Integer(), db.ForeignKey('user.id')),
+                       db.Column('user_id', db.Integer(), db.ForeignKey('user.id')),
+                       db.Column('role_id', db.Integer(), db.ForeignKey('role.id')),
                        db.Column('created', DateTimeTZ, default=datetime.utcnow))
 
 
