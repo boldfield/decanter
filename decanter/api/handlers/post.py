@@ -5,6 +5,7 @@ from flask.ext.login import login_required
 from decanter.negotiate import accepts
 from decanter.api.interface import post
 from decanter.response import json_response
+from decanter.restrict import crossdomain
 from decanter.exceptions import (ObjectNotFoundError,
                                  UnauthorizedObjectAccessError)
 
@@ -16,12 +17,14 @@ plan = Blueprint('post', __name__, url_prefix='/post')
 #       Read Handlers       #
 #############################
 @plan.route('/', methods=['GET'])
+@crossdomain(origin='*')
 def post_read():
     c = post.get()
     return json_response([i.serialize() for i in c], 200)
 
 
 @plan.route('/<int:post_id>', methods=['GET'])
+@crossdomain(origin='*')
 def post_read_instance_by_id(post_id):
     p = post.get_by_id(post_id)
     if not p:
@@ -30,6 +33,7 @@ def post_read_instance_by_id(post_id):
 
 
 @plan.route('/<string:post_slug>', methods=['GET'])
+@crossdomain(origin='*')
 def post_read_instance_by_slug(post_slug):
     p = post.get_by_slug(post_slug)
     if not p:
@@ -42,6 +46,7 @@ def post_read_instance_by_slug(post_slug):
 ##############################
 @plan.route('/', methods=['POST'])
 @accepts('application/json')
+@crossdomain(origin='*')
 @login_required
 def post_create():
     usr = current_user._get_current_object()
@@ -63,6 +68,7 @@ def post_create():
 ##############################
 @plan.route('/<int:post_id>', methods=['PUT'])
 @accepts('application/json')
+@crossdomain(origin='*')
 @login_required
 def post_update_by_id(post_id):
     usr = current_user._get_current_object()
@@ -82,6 +88,7 @@ def post_update_by_id(post_id):
 
 @plan.route('/<string:post_slug>', methods=['PUT'])
 @accepts('application/json')
+@crossdomain(origin='*')
 @login_required
 def post_update_by_slug(post_slug):
     usr = current_user._get_current_object()

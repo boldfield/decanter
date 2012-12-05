@@ -2,6 +2,7 @@ from flask import Blueprint, abort
 from flask.ext.login import login_required
 
 from decanter.response import json_response
+from decanter.restrict import crossdomain
 from decanter.database.models import Role
 
 
@@ -12,6 +13,7 @@ plan = Blueprint('role', __name__, url_prefix='/role')
 #       Read Handlers       #
 #############################
 @plan.route('/', methods=['GET'])
+@crossdomain(origin='*')
 @login_required
 def role_read():
     roles = Role.query.order_by(Role.id).all()
@@ -19,6 +21,7 @@ def role_read():
 
 
 @plan.route('/<int:role_id>', methods=['GET'])
+@crossdomain(origin='*')
 @login_required
 def role_read_instance(role_id):
     r = Role.query.filter_by(id=role_id).first()
