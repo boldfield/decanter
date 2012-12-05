@@ -15,7 +15,7 @@ plan = Blueprint('user', __name__, url_prefix='/user')
 #############################
 #       Read Handlers       #
 #############################
-@plan.route('/', methods=['GET'])
+@plan.route('/', methods=['GET', 'OPTIONS'])
 @crossdomain(origin=Decanter.xhr_allow_origin, headers='Content-Type')
 @login_required
 def user_read():
@@ -24,7 +24,7 @@ def user_read():
     return json_response([u.serialize() for u in users], 200)
 
 
-@plan.route('/<int:user_id>', methods=['GET'])
+@plan.route('/<int:user_id>', methods=['GET', 'OPTIONS'])
 @crossdomain(origin=Decanter.xhr_allow_origin, headers='Content-Type')
 @login_required
 def user_read_instance_by_id(user_id):
@@ -35,7 +35,7 @@ def user_read_instance_by_id(user_id):
     return json_response(u.serialize(), 200)
 
 
-@plan.route('/<string:username>', methods=['GET'])
+@plan.route('/<string:username>', methods=['GET', 'OPTIONS'])
 @crossdomain(origin=Decanter.xhr_allow_origin, headers='Content-Type')
 @login_required
 def user_read_instance_by_username(username):

@@ -17,14 +17,14 @@ plan = Blueprint('post', __name__, url_prefix='/post')
 #############################
 #       Read Handlers       #
 #############################
-@plan.route('/', methods=['GET'])
+@plan.route('/', methods=['GET', 'OPTIONS'])
 @crossdomain(origin=Decanter.xhr_allow_origin, headers='Content-Type')
 def post_read():
     c = post.get()
     return json_response([i.serialize() for i in c], 200)
 
 
-@plan.route('/<int:post_id>', methods=['GET'])
+@plan.route('/<int:post_id>', methods=['GET', 'OPTIONS'])
 @crossdomain(origin=Decanter.xhr_allow_origin, headers='Content-Type')
 def post_read_instance_by_id(post_id):
     p = post.get_by_id(post_id)
@@ -33,7 +33,7 @@ def post_read_instance_by_id(post_id):
     return json_response(p.serialize(), 200)
 
 
-@plan.route('/<string:post_slug>', methods=['GET'])
+@plan.route('/<string:post_slug>', methods=['GET', 'OPTIONS'])
 @crossdomain(origin=Decanter.xhr_allow_origin, headers='Content-Type')
 def post_read_instance_by_slug(post_slug):
     p = post.get_by_slug(post_slug)

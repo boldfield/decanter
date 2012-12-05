@@ -13,7 +13,7 @@ plan = Blueprint('role', __name__, url_prefix='/role')
 #############################
 #       Read Handlers       #
 #############################
-@plan.route('/', methods=['GET'])
+@plan.route('/', methods=['GET', 'OPTIONS'])
 @crossdomain(origin=Decanter.xhr_allow_origin, headers='Content-Type')
 @login_required
 def role_read():
@@ -21,7 +21,7 @@ def role_read():
     return json_response([r.serialize() for r in roles], 200)
 
 
-@plan.route('/<int:role_id>', methods=['GET'])
+@plan.route('/<int:role_id>', methods=['GET', 'OPTIONS'])
 @crossdomain(origin=Decanter.xhr_allow_origin, headers='Content-Type')
 @login_required
 def role_read_instance(role_id):
