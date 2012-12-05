@@ -38,11 +38,11 @@ installdb:
 
 upload: upload-dev
 
-upload-dev: clean
+upload-dev: clean assets
 	@$(SETUP) egg_info --tag-build='-dev.$(TIMESTAMP).$(REV)' sdist upload -r oldfieldio
 
-upload-nightly: clean
+upload-nightly: clean assets
 	@$(SETUP) egg_info --tag-date --tag-build='-dev' sdist upload -r oldfieldio
 
-upload-release: clean
+upload-release: clean assets
 	@$(SETUP) sdist upload -r oldfieldio
