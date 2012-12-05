@@ -88,7 +88,7 @@ class Decanter(object, LoginManagerMixin):
 
     def get_application_by_subdomain(self, subdomain):
         with self.lock:
-            app = self.instances.get(subdomain)
+            app = self.subdomain_instances.get(subdomain)
             if app is None:
                 create_app = self.subdomains.get(subdomain)
                 if create_app is None:
