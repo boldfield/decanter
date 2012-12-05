@@ -39,7 +39,7 @@ class Decanter(object, LoginManagerMixin):
         if admin_subdomain:
             self.subdomains[admin_subdomain] = create_web_app
         if api_subdomain:
-            self.subdomains[admin_subdomain] = create_api_app
+            self.subdomains[api_subdomain] = create_api_app
 
         self.paths[admin_prefix or 'admin'] = create_web_app
         self.paths[api_prefix or 'api'] = create_api_app
