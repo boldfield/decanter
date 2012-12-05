@@ -2,7 +2,7 @@
 <!doctype html>
 <head>
   <meta http-equiv="Content-type" content="text/html; charset=utf-8"/>
-  <title>Test Site</title>
+  <title>{% block title -%}Test Site{% endblock -%}</title>
 
   {% block style -%}
   {{ assets.style('lib-css-min', debug='lib-css') }}
