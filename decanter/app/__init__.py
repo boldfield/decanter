@@ -6,7 +6,7 @@ from flask.ext.assets import Environment
 
 from decanter import DIR
 from decanter import settings, restrict
-from decanter.app.handlers import admin
+from decanter.app.handlers import admin, auth
 from decanter import database
 
 
@@ -23,8 +23,7 @@ def create_app():
 
 
 def register_blueprints(app):
-    from decanter.app.handlers import auth
-    app.register_blueprint(auth, url_prefix='/admin')
+    app.register_blueprint(auth.plan, url_prefix='/admin')
     app.register_blueprint(admin.plan, url_prefix='/admin')
 
 

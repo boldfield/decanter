@@ -16,7 +16,7 @@ class LoginManagerMixin:
     def setup_login_manager(self, app):
         self._app = app
         self._login_manager.setup_app(app)
-        self._login_manager.login_view = "/login"
+        self._login_manager.login_view = "/admin/login"
 
         @self._login_manager.user_loader
         def load_user(userid):

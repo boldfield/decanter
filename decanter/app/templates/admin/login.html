@@ -1,7 +1,7 @@
 {% extends "admin/base.html" %}
 {% block body %}
 <div class="container">
-  <form action="/login" method="POST">
+  <form action="/admin/login" method="POST">
       {{ form.hidden_tag() }}
       {{ form.username.label }} {{ form.username }}<br/>
       {{ form.password.label }} {{ form.password }}<br/>
