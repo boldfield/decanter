@@ -1,0 +1,41 @@
+{% extends 'admin/base.html' %}
+{% block body %}
+<div class="container">
+  <form id="admin-post-update" data-bind="submit: form.submit">
+    <label>
+      <span class="label">Post Title</span>
+      <input name="title"
+            type="text"
+            data-bind="value: form.title, css: { error: form.isInvalid('title') }"
+            placeholder="Post Title"
+            autofocus="autofocus" />
+    </label>
+
+    <label>
+      <span class="label">Post Slug</span>
+      <input name="slug"
+            type="text"
+            data-bind="value: form.slug, valueUpdate: 'afterkeydown', css: { error: form.isInvalid('slug') }"
+            placeholder="Post Slug" />
+    </label>
+
+    <label>
+      <span class="label">Content</span>
+      <textarea class="large"
+                name="content"
+                data-bind="value: form.content, valueUpdate: 'afterkeydown', css: { error: form.isInvalid('content') }">
+      </textarea>
+    </label>
+    <input class="btn" type="submit" value="Save">
+    <a class="btn" data-bind="click: cancel"/>Cancel</a>
+  </form>
+</div>
+{% endblock %}
+
+{% block init_page %}
+  <script type="text/javascript">
+    DC.admin.PostEditPage.init({
+      postId: {{ post_id }}
+    });
+  </script>
+{% endblock %}

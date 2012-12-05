@@ -1,21 +1,57 @@
+{%- import 'macros/asset.html' as assets with context -%}
 <!doctype html>
 <head>
   <meta http-equiv="Content-type" content="text/html; charset=utf-8"/>
   <title>Test Site</title>
+
+  {% block style -%}
+  {{ assets.style('lib-css-min', debug='lib-css') }}
+  {{ assets.style('app-css-min', debug='app-css') }}
+  {% endblock -%}
+
+  {% block modernizr -%}
+  <script src="{{ url_for('static', filename='script/modernizr.js') }}"></script>
+  {% endblock -%}
 </head>
-<body>
-{% with messages = get_flashed_messages() %}
-  {% if messages %}
-    <ul class=flashes>
-    {% for message in messages %}
-      <li>{{ message }}</li>
-    {% endfor %}
-    </ul>
-  {% endif %}
-{% endwith %}
-{% block content %}
+<body class="{% block body_class %}{% endblock %}">
+  {% block ie -%}
+  <!--[if lt IE 7]>
+  <p class="chromeframe">
+    You are using an outdated browser.
+    <a href="http://browsehappy.com/">Upgrade your browser today</a> or 
+    <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> 
+    to better experience this site.
+  </p>
+  <![endif]-->
+  {% endblock -%}
+
+  <header>
+  {% block header -%}
+  {% endblock -%}
+  </header>
+
+  {% block flash_messages -%}
+  <section id="flash-messages">
+    {% include "snippets/flash.html" %}
+  </section>
+  {% endblock -%}
+
+  {% block body -%}
   <h1>Hello World! From base.html</h1>
-{% endblock content %}
-<script src="{{ url_for('static', filename='script/decanter.js') }}"></script>
+  {% endblock -%}
+
+  <footer>
+    {% block footer -%}
+    {% endblock -%}
+  </footer>
+
+  {% block scripts -%}
+  {{ assets.script('lib-js-min', debug='lib-js') }}
+  {{ assets.script('kohelpers-js-min', debug='kohelpers-js') }}
+  {{ assets.script('app-js-min', debug='app-js') }}
+  {% endblock -%}
+
+  {% block init -%}
+  {% endblock -%}
 </body>
 </html>

@@ -1,0 +1,40 @@
+html {
+  background-color: #000;
+  color: #FFF;
+}
+.container {
+  min-height: 380px;
+  padding-bottom: 15px;
+}
+form {
+  overflow: hidden;
+}
+form table {
+  margin: 10px 20px;
+  margin-bottom: 45px;
+}
+form table tr > td {
+  min-width: 100px;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+form table .data-row {
+  border-top: solid 1px black;
+  height: 31px;
+}
+form label textarea {
+  width: 50%;
+  height: 200px;
+}
+form label input {
+  width: 50%;
+}
+form label .label {
+  display: block;
+  width: 150px;
+  margin-bottom: 5px;
+}
+form label .btn {
+  float: left;
+  margin-left: 25px;
+}

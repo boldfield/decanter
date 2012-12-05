@@ -2,6 +2,7 @@ from cement.core import controller
 
 from decanter import app, cli
 from decanter.app import create_app
+from decanter.cli import InstallDBController, CreateRoleController, CreateUserController
 
 
 class RootController(cli.RootController):
@@ -73,7 +74,10 @@ class App(cli.App):
         label = 'decanter'
         base_controller = RootController
         handlers = (ServerController,
-                    AssetController)
+                    AssetController,
+                    InstallDBController,
+                    CreateRoleController,
+                    CreateUserController)
 
 
 if __name__ == '__main__':

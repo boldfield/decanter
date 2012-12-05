@@ -1,32 +1,38 @@
-{% extends 'admin/master.html' %}
+{% extends 'admin/base.html' %}
 {% block body %}
-{% if posts %}
-<form action="/admin/posts/" method="POST">
-  <table>
-    <tr>
-      <td>ID</td>
-      <td>Author</td>
-      <td>Title</td>
-      <td>Slug</td>
-      <td>Created Date</td>
-      <td>Published Date</td>
-      <td>Active</td>
-      <td></td>
-    </tr>
-  {% for post in posts %}
-    <tr>
-      <td>{{ post.id }}</td>
-      <td>{{ post.author_name }}</td>
-      <td>{{ post.title }}</td>
-      <td>{{ post.slug }}</td>
-      <td>{{ post.created.strftime('%Y-%m-%d') }}</td>
-      <td>{{ post.published.strftime('%Y-%m-%d') if post.published else ''}}</td>
-      <td><input type="checkbox"{{ ' checked' if post.active }} /></td>
-      <td><a href="/admin/posts/edit/{{ post.id }}">edit</a></td>
-    </tr>
-  {% endfor %}
-  </table>
-  <input type="submit" value="Update"/>
-</form>
-{% endif %}
+<div class="container">
+  <form id="admin-post-update" data-bind="submit: posts.commitUpdated">
+    <table>
+      <tr>
+        <td>ID</td>
+        <td>Author</td>
+        <td>Title</td>
+        <td>Subtitle</td>
+        <td>Slug</td>
+        <td>Active</td>
+        <td></td>
+      </tr>
+      <tbody data-bind="foreach: posts.models">
+        <tr class="data-row">
+          <td data-bind="text: id"></td>
+          <td data-bind="text: author_id"></td>
+          <td data-bind="text: title"></td>
+          <td data-bind="text: subtitle"></td>
+          <td data-bind="text: slug"></td>
+          <td><input type="checkbox" data-bind="checked: active, attr: { name: activeFieldName }"/></td>
+          <td><a href="#" data-bind="attr: { href: editLink }">edit</a></td>
+        </tr>
+      </tbody>
+    </table>
+    <input class="btn" type="submit" value="Update"/>
+    <a class="btn" data-bind="click: newPost"/>New</a>
+  </form>
+</div>
+{% endblock %}
+
+{% block init_page %}
+  <script type="text/javascript">
+    DC.admin.PostsPage.init({
+    });
+  </script>
 {% endblock %}

@@ -1,12 +1,11 @@
-from uuid import uuid4
-
 from flask.ext.script import Manager
 from werkzeug.serving import run_simple
 
-from decanter.api.models import (app, db, User, Role)
-from decanter import application
+from decanter.database import db
+from decanter.database.models import User, Role, Post
+from decanter import app as application
 
-manager = Manager(app)
+manager = Manager(application)
 
 DUMMY_CONTENT = u'Cras mattis consectetur purus sit amet fermentum. Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Integer posuere erat a ante venenatis dapibus posuere velit aliquet. Aenean lacinia bibendum nulla sed consectetur. Sed posuere consectetur est at lobortis.'
 
@@ -14,40 +13,38 @@ DUMMY_CONTENT = u'Cras mattis consectetur purus sit amet fermentum. Vivamus sagi
 @manager.command
 def initdb():
     """Creates all database tables."""
+    raise Exception(application.config)
     db.create_all()
 
 
 @manager.command
 def create_roles():
-    with app.test_request_context():
-        r1 = Role(name='admin', description='Administrative user.')
-        r2 = Role(name='user', description='General system user.')
-        db.session.add(r1)
-        db.session.add(r2)
-        db.session.commit()
+    r1 = Role(name='admin', description='Administrative user.')
+    r2 = Role(name='user', description='General system user.')
+    db.session.add(r1)
+    db.session.add(r2)
+    db.session.commit()
 
 
 @manager.command
 def create_users():
-    with app.test_request_context():
-        u1 = User(username='admin',
-                  email='admin@optionminder.com',
-                  password='admin',
-                  roles=['user','admin'])
+    u1 = User(username='admin',
+              email='admin@decanter.com',
+              password='admin',
+              roles=['user', 'admin'])
 
-        u2 = User(username='testuser',
-                  email='testuser@optionminder.com',
-                  password='test',
-                  roles=['user'])
+    u2 = User(username='testuser',
+              email='testuser@decanter.com',
+              password='test',
+              roles=['user'])
 
-        db.session.add(u1)
-        db.session.add(u2)
-        db.session.commit()
+    db.session.add(u1)
+    db.session.add(u2)
+    db.session.commit()
 
 
 @manager.command
 def create_posts():
-    from decanter.api.models import Post, User
     user = User.query.all()[0]
     post_one = Post(author=user.id,
                     title=u'Test Post One',

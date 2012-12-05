@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% block header %}
+  <section id="admin-navbar">
+    {% include "admin/snippets/navbar.html" %}
+  </section>
+{% endblock %}
+
+{% block body %}
+  <div class="container">
+    <div class="span12">
+      {% block content %}
+      Hello
+      {% endblock %}
+    </div>
+  </div>
+{% endblock %}
+
+{% block scripts %}
+  {{ assets.script('lib-js-min', debug='lib-js') }}
+  {{ assets.script('kohelpers-js-min', debug='kohelpers-js') }}
+  {{ assets.script('app-admin-js-min', debug='app-admin-js') }}
+{% endblock %}
+
+{% block init %}
+  <script type="text/javascript">
+    DC.Admin.init({
+        apiPathSegment: 'api'
+    })
+  </script>
+
+  <script type="text/javascript">
+    DC.AdminNav.init({
+      targets: [
+        {id: "#admin-home", link: "/admin/"},
+        {id: "#admin-posts", link: "/admin/posts"},
+        {id: "#admin-users", link: "/admin/users"},
+        {id: "#admin-groups", link: "/admin/groups"}
+      ]
+    });
+  </script>
+  {% block init_page -%}
+  {% endblock %}
+{% endblock %}

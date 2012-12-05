@@ -1,0 +1,5 @@
+recursive-include decanter/static *
+recursive-include decanter/templates *
+recursive-include decanter/app/templates *
+include decanter/assets/manifest.yaml
+include decanter/assets/.webassets-manifest

@@ -1,43 +1,111 @@
 import os
+from threading import Lock
 
 DIR = os.path.abspath(__file__)
 DIR = os.path.dirname(DIR)
 
-from werkzeug.exceptions import NotFound
+from werkzeug.wsgi import pop_path_info, peek_path_info
 
-from decanter.dispatch import SubdomainDispatcher
-from decanter.app import (create_app as create_web_app,
-                          register_blueprints as register_om_blueprints)
-from decanter.api import (create_app as create_api_app,
-                          register_blueprints as register_api_blueprints)
+from decanter.app import create_app as create_web_app
+from decanter.api import create_app as create_api_app
+from decanter.util import LoginManagerMixin
 
-# TODO : These should be in settings.
-SUPPORTED_SUBDOMAINS = ('api', 'www', '')
-SUBDOMAIN_MAP = {'api': create_api_app,
-                 'www': create_web_app,
-                 '': create_web_app}
-BLUEPRINT_MAP = {'api': register_api_blueprints,
-                 'www': register_om_blueprints,
-                 '': register_om_blueprints}
+STRIP_PATHS = ('api',)
 
 
-def create_app(subdomain):
-    if not subdomain in SUPPORTED_SUBDOMAINS:
-        # We can then just return the NotFound() exception as
-        # application which will render a default 404 page.
-        return NotFound()
+class Decanter(object, LoginManagerMixin):
+    _strip_paths = STRIP_PATHS
 
-    # Default to OptionMinder App
-    create_app = SUBDOMAIN_MAP.get(subdomain, create_web_app)
-    app = create_app()
+    def __init__(self,
+                 default_app,
+                 admin_subdomain=None,
+                 admin_prefix=None,
+                 api_subdomain=None,
+                 api_prefix=None):
 
-    # Register view blueprints
-    register_blueprints = BLUEPRINT_MAP.get(subdomain, register_om_blueprints)
-    register_blueprints(app)
+        self.lock = Lock()
+        self.default_app = default_app
+        self.path_instances = dict()
+        self.subdomain_instances = dict()
+        self.default_instances = dict()
 
-    # Register login manager
-    #app.pwd_context = PWD_CONTEXT
+        self.subdomains = dict()
+        self.paths = dict()
 
-    return app
+        self.strip_paths = list()
+        for path in self._strip_paths:
+            self.strip_paths.append(path)
 
-app = SubdomainDispatcher(create_app)
+        if admin_subdomain:
+            self.subdomains[admin_subdomain] = create_web_app
+        if api_subdomain:
+            self.subdomains[admin_subdomain] = create_api_app
+
+        self.paths[admin_prefix or 'admin'] = create_web_app
+        self.paths[api_prefix or 'api'] = create_api_app
+
+    def __call__(self, environ, start_response):
+        host = environ['HTTP_HOST']
+        subdomain = self._subdomain(host)
+        path = peek_path_info(environ)
+
+        if subdomain in self.subdomains:
+            app = self.get_application_by_subdomain(subdomain)
+        else:
+            app = self.get_application_by_path(path)
+
+        if app is None:
+            app = self.default_instances.get(subdomain)
+            if app is None:
+                app = self.default_app()
+                self.setup_login_manager(app)
+                self.default_instances[subdomain] = app
+
+        if path in self.strip_paths:
+            pop_path_info(environ)
+
+        return app(environ, start_response)
+
+    def register_app(self, create_app, subdomain=None, path=None, strip_path=False):
+        if subdomain:
+            self.subdomains[subdomain] = create_app
+        if path:
+            self.paths[path] = create_app
+        if strip_path:
+            self.strip_paths.append(path)
+
+    def get_application_by_path(self, path):
+        with self.lock:
+            app = self.path_instances.get(path)
+            if app is None:
+                create_app = self.paths.get(path)
+                if create_app is None:
+                    return None
+                app = create_app()
+                self.setup_login_manager(app)
+                self.path_instances[path] = app
+            return app
+
+    def get_application_by_subdomain(self, subdomain):
+        with self.lock:
+            app = self.instances.get(subdomain)
+            if app is None:
+                create_app = self.subdomains.get(subdomain)
+                if create_app is None:
+                    return None
+                app = create_app()
+                self.setup_login_manager(app)
+                self.subdomain_instances[subdomain] = app
+            return app
+
+    def _subdomain(self, host):
+        host = host.split(':')[0]
+        parts = host.split('.')
+        if len(parts) < 3:
+            return ''
+
+        subdomain = parts[0]
+        return subdomain if subdomain != 'stage' else parts[1]
+
+
+app = Decanter(create_web_app)

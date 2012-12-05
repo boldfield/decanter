@@ -1,13 +1,97 @@
 app-js:
-    output: ../app/static/script/decanter.js
+    output: ../static/script/decanter.js
     filters: coffeescript
     debug: False
     contents:
-        - ../../assets/script/index.coffee
+        - ../assets/script/index.coffee
 
 app-js-min:
-    output: ../app/static/script/decanter.min.js
+    output: ../static/script/decanter.min.js
     filters: uglifyjs
     debug: False
     contents:
         - app-js
+
+app-admin-js:
+    output: ../static/script/decanter-admin.js
+    filters: coffeescript
+    debug: False
+    contents:
+        - ../assets/script/index.coffee
+        - ../assets/script/admin.coffee
+
+app-admin-js-min:
+    output: ../static/script/decanter-admin.min.js
+    filters: uglifyjs
+    debug: False
+    contents:
+        - app-admin-js
+
+kohelpers-js:
+    output: ../static/script/kohelpers.js
+    filters: coffeescript
+    debug: False
+    contents:
+        - ../assets/script/kohelpers/index.coffee
+        - ../assets/script/kohelpers/extend.coffee
+        - ../assets/script/kohelpers/form.coffee
+        - ../assets/script/kohelpers/schema.coffee
+        - ../assets/script/kohelpers/validation.coffee
+
+kohelpers-js-min:
+    output: ../static/script/kohelpers.min.js
+    filters: uglifyjs
+    debug: False
+    contents:
+        - app-js
+
+app-css:
+    output: ../static/style/decanter/app.css
+    filters: less
+    debug: False
+    contents:
+        - filters: less
+          debug: False
+          contents:
+            - ../assets/style/index.less
+
+app-css-min:
+    output: ../static/style/decanter/app.min.css
+    filters: yui_css
+    debug: False
+    contents:
+        - app-css
+
+lib-css:
+    output: ../static/style/bootstrap.css
+    filters: less
+    debug: False
+    contents:
+        - ../static/style/bootstrap-2.2.0.css
+        - ../static/style/bootstrap-responsive-2.2.0.css
+
+lib-css-min:
+    output: ../static/style/bootstrap.min.css
+    filters: yui_css
+    debug: False
+    contents:
+        - lib-css
+
+lib-js:
+    output: ../static/script/lib.js
+    contents:
+        - ../static/script/jquery-1.8.0.js
+        - ../static/script/jquery-vmouse.js
+        - ../static/script/jquery-touch.js
+        - ../static/script/jquery-orientation.js
+        - ../static/script/knockout-2.2.0.js
+        - ../static/script/knockout.mapping-2.3.3.js
+        - ../static/script/bootstrap-2.2.0.js
+        - ../static/script/signals-0.8.1.js
+
+lib-js-min:
+    output: ../static/script/lib.min.js
+    filters: uglifyjs
+    debug: False
+    contents:
+        - lib-js

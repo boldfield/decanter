@@ -1,0 +1,23 @@
+{%- macro style(asset, debug=None) -%}
+{% if config.DEBUG and debug -%}
+{%- assets debug -%}
+<link type="text/css" rel="stylesheet" href="{{ ASSET_URL }}" />
+{%- endassets -%}
+{% else -%}
+{%- assets asset -%}
+<link type="text/css" rel="stylesheet" href="{{ ASSET_URL }}" />
+{%- endassets -%}
+{% endif -%}
+{%- endmacro -%}
+
+{%- macro script(asset, debug=None) -%}
+{% if config.DEBUG and debug -%}
+{%- assets debug -%}
+<script type="text/javascript" src="{{ ASSET_URL }}"></script>
+{%- endassets -%}
+{% else -%}
+{%- assets asset -%}
+<script type="text/javascript" src="{{ ASSET_URL }}"></script>
+{%- endassets -%}
+{% endif -%}
+{%- endmacro -%}
