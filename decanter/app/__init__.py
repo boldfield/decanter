@@ -15,6 +15,7 @@ def create_app():
     settings.init_app(app)
     database.init_app(app)
     restrict.init_app(app)
+    init_api_context(app)
 
     register_blueprints(app)
     register_assets(app)
@@ -25,6 +26,13 @@ def create_app():
 def register_blueprints(app):
     app.register_blueprint(auth.plan)
     app.register_blueprint(admin.plan)
+
+
+def init_api_context(app):
+    def api_context():
+        return dict(api_path=app.config.get('API_PATH'),
+                    api_host=app.config.get('API_HOST'))
+    app.context_processor(api_context)
 
 
 def register_assets(app):
