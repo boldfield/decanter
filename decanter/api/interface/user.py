@@ -18,8 +18,10 @@ def create(username, email, password, roles, active=True):
 
     return usr
 
+
 def get():
     return User.query.all()
+
 
 def get_by_username(username):
     if not username:
