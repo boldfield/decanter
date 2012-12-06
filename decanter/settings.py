@@ -21,23 +21,27 @@ def init_app(app):
 class base(object):
     DEBUG = False
     TESTING = False
-    DOMAIN = os.environ.get('DECANTER_DOMAIN', 'localhost')
+
+    SESSION_COOKIE_DOMAIN = os.environ.get('DECANTER_COOKIE_DOMAIN')
+    SESSION_COOKIE_NAME = 'decanter_session'
+
+    REMEMBER_COOKIE_NAME = os.environ.get('DECANTER_COOKIE_DOMAIN')
+    REMEMBER_COOKIE_DOMAIN = 'decanter_remember'
+
     SQLALCHEMY_DATABASE_URI = database
     SECRET_KEY = os.environ.get('DECANTER_SECRET', 'development-key')
     SESSION_SALT = os.environ.get('DECANTER_SESSION_SALT', 'development-salt')
+
     WHITELIST = whitelist
     BLACKLIST = blacklist
+
     CSRF_COOKIE_NAME = 'decanter_csrf'
     CSRF_DISABLE = False
+
     GOOGLE_ANALYTICS_ID = os.environ.get('DECANTER_GOOGLE_ANALYTICS_ID')
+
     API_PATH = os.environ.get('DECANTER_API_PATH')
     API_HOST = os.environ.get('DECANTER_API_HOST')
-
-    SESSION_COOKIE_DOMAIN = DOMAIN
-    SESSION_COOKIE_NAME = 'decanter_session'
-
-    REMEMBER_COOKIE_NAME = DOMAIN
-    REMEMBER_COOKIE_DOMAIN = 'decanter_remember'
 
 
 class dev(base):
