@@ -21,8 +21,10 @@ class DC.Application
     @apiRoot = "#{@protocol}//#{@apiHost}"
     @apiRoot = "#{@apiRoot}/#{@apiPathSegment}" if @apiPathSegment
 
-  log: ->
-    console.log('Hello World!')
+    @adminPath = config.adminPath or ''
+    if @adminPath
+      @adminPath = @adminPath.replace('/','')
+      @adminPath = "/#{@adminPath}"
 
 
 class DC.Navigation

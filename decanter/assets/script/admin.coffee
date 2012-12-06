@@ -74,7 +74,7 @@ class DC.admin.models.Post extends kohelpers.model.Model
     @endpoint = "#{DC.app.apiRoot}/post/#{@id()}"
 
   editLink: ->
-    return "/admin/posts/edit/#{@id()}"
+    return "#{DC.app.adminPath}/posts/edit/#{@id()}"
 
   activeFieldName: ->
     return "post-#{@id()}-active"
@@ -149,7 +149,7 @@ class DC.admin.PostsPage extends DC.Page
 
   newPost: (context, e) ->
     e.preventDefault()
-    window.location = "/admin/posts/create"
+    window.location = "#{DC.app.adminPath}/posts/create"
 
 class DC.admin.UsersPage extends DC.Page
 
@@ -178,7 +178,7 @@ class DC.admin.PostCreatePage extends DC.Page
     @back()
 
   back: ->
-    window.location = "/admin/posts"
+    window.location = "#{DC.app.adminPath}/posts"
 
 class DC.admin.PostEditPage extends DC.Page
 
@@ -229,4 +229,4 @@ class DC.admin.PostEditPage extends DC.Page
     @back()
 
   back: ->
-    window.location = "/admin/posts"
+    window.location = "#{DC.app.adminPath}/posts"
