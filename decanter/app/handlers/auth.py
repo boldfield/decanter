@@ -30,7 +30,7 @@ def login_write():
         flash('Unknown username/password combination.')
         return render_template("admin/login.html", form=form)
     login_user(user, remember=True)
-    return redirect(request.args.get('next') or '/admin')
+    return redirect(request.args.get('next') or '/')
 
 
 @plan.route('/logout', methods=["GET"])
