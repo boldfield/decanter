@@ -25,8 +25,8 @@ class base(object):
     SESSION_COOKIE_DOMAIN = os.environ.get('DECANTER_COOKIE_DOMAIN')
     SESSION_COOKIE_NAME = 'decanter_session'
 
-    REMEMBER_COOKIE_NAME = os.environ.get('DECANTER_COOKIE_DOMAIN')
-    REMEMBER_COOKIE_DOMAIN = 'decanter_remember'
+    REMEMBER_COOKIE_NAME = 'decanter_remember'
+    REMEMBER_COOKIE_DOMAIN = os.environ.get('DECANTER_COOKIE_DOMAIN')
 
     SQLALCHEMY_DATABASE_URI = database
     SECRET_KEY = os.environ.get('DECANTER_SECRET', 'development-key')
