@@ -27,12 +27,17 @@ class base(object):
     SESSION_SALT = os.environ.get('DECANTER_SESSION_SALT', 'development-salt')
     WHITELIST = whitelist
     BLACKLIST = blacklist
-    SESSION_COOKIE_NAME = 'decanter_session'
     CSRF_COOKIE_NAME = 'decanter_csrf'
     CSRF_DISABLE = False
     GOOGLE_ANALYTICS_ID = os.environ.get('DECANTER_GOOGLE_ANALYTICS_ID')
     API_PATH = os.environ.get('DECANTER_API_PATH')
     API_HOST = os.environ.get('DECANTER_API_HOST')
+
+    SESSION_COOKIE_DOMAIN = DOMAIN
+    SESSION_COOKIE_NAME = 'decanter_session'
+
+    REMEMBER_COOKIE_NAME = DOMAIN
+    REMEMBER_COOKIE_DOMAIN = 'decanter_remember'
 
 
 class dev(base):
