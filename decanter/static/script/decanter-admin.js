@@ -33,11 +33,12 @@ DC.Application = (function() {
     if (this.apiPathSegment) {
       this.apiRoot = "" + this.apiRoot + "/" + this.apiPathSegment;
     }
+    this.adminPath = config.adminPath || '';
+    if (this.adminPath) {
+      this.adminPath = this.adminPath.replace('/', '');
+      this.adminPath = "/" + this.adminPath;
+    }
   }
-
-  Application.prototype.log = function() {
-    return console.log('Hello World!');
-  };
 
   return Application;
 
@@ -150,8 +151,16 @@ DC.AdminNav = (function(_super) {
   __extends(AdminNav, _super);
 
   function AdminNav() {
+    this.onClick = __bind(this.onClick, this);
     return AdminNav.__super__.constructor.apply(this, arguments);
   }
+
+  AdminNav.prototype.onClick = function(e) {
+    var navItem;
+    e.preventDefault();
+    navItem = this["#" + e.target.id];
+    return window.location = "" + DC.app.adminPath + navItem.link;
+  };
 
   return AdminNav;
 
@@ -247,7 +256,7 @@ DC.admin.models.Post = (function(_super) {
   }
 
   Post.prototype.editLink = function() {
-    return "/admin/posts/edit/" + (this.id());
+    return "" + DC.app.adminPath + "/posts/edit/" + (this.id());
   };
 
   Post.prototype.activeFieldName = function() {
@@ -364,7 +373,7 @@ DC.admin.PostsPage = (function(_super) {
 
   PostsPage.prototype.newPost = function(context, e) {
     e.preventDefault();
-    return window.location = "/admin/posts/create";
+    return window.location = "" + DC.app.adminPath + "/posts/create";
   };
 
   return PostsPage;
@@ -416,7 +425,7 @@ DC.admin.PostCreatePage = (function(_super) {
   };
 
   PostCreatePage.prototype.back = function() {
-    return window.location = "/admin/posts";
+    return window.location = "" + DC.app.adminPath + "/posts";
   };
 
   return PostCreatePage;
@@ -488,7 +497,7 @@ DC.admin.PostEditPage = (function(_super) {
   };
 
   PostEditPage.prototype.back = function() {
-    return window.location = "/admin/posts";
+    return window.location = "" + DC.app.adminPath + "/posts";
   };
 
   return PostEditPage;
