@@ -1,4 +1,4 @@
-var DC, _base, _base1, _ref, _ref1, _ref2, _ref3,
+var DC, post, _base, _base1, _ref, _ref1, _ref2, _ref3,
   __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -240,9 +240,17 @@ DC.admin.forms.Post = (function(_super) {
 
 })(kohelpers.form.Form);
 
+post = new kohelpers.model.Schema();
+
+post.addField('content');
+
+post.mapDependentRemote('location', 'content');
+
 DC.admin.models.Post = (function(_super) {
 
   __extends(Post, _super);
+
+  Post.schema = post;
 
   Post.endpoint = function(id) {
     return "" + DC.app.apiRoot + "/post/" + id;

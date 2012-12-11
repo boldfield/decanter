@@ -1,10 +1,14 @@
-import pytz
 from datetime import datetime
 
+from sqlalchemy.sql.expression import desc
+
+from flask import current_app as app
+
 from decanter.database import db
-from decanter.database.models import Post, User
+from decanter.database.models import Post
 from decanter.exceptions import (ObjectNotFoundError,
-                                 UnauthorizedObjectAccessError)
+                                 UnauthorizedObjectAccessError,
+                                 InvalidSettingsError)
 
 __all__ = ('get', 'create', 'update', 'delete')
 
@@ -29,17 +33,26 @@ def get_by_user(user):
     return q.all()
 
 
-def get_gy_tags(tags):
+def get_by_tags(tags):
     pass
 
 
-def create(user, slug, title, content, subtitle=None, tags=None):
+def create(user, slug, title, content, format, subtitle=None, domain=None, tags=None):
     from decanter.api.interface import tag as TagInterface
+    if domain is None:
+        domain = app.config.get('DEFAULT_CONTENT_DOMAIN')
+
+    version = _increment_version(slug)
+    app.content.save(slug, version, format, content, domain)
+
     p = Post()
     p.author_id = user.id
     p.title = title
     p.slug = slug
-    p.content = content
+    p.format = format
+    p.version = version
+    p.domain = domain
+    p.location = app.content.url(slug, version, format, domain)
 
     if subtitle is not None:
         p.subtitle = subtitle
@@ -51,10 +64,20 @@ def create(user, slug, title, content, subtitle=None, tags=None):
             TagInterface.add(p, tag)
 
     db.session.commit()
+
     return p
 
 
-def update(post, user, slug=None, title=None, content=None, tags=None, active=None):
+def _increment_version(slug):
+    post = Post.query.filter_by(slug=slug)\
+                     .order_by(desc(Post.id)).first()
+    version = 1
+    if post:
+        version = post.version + 1
+    return version
+
+
+def update(post, user, title=None, content=None, tags=None, active=None):
     from decanter.api.interface import tag as TagInterface
 
     if not post.author == user:
@@ -62,18 +85,20 @@ def update(post, user, slug=None, title=None, content=None, tags=None, active=No
         raise UnauthorizedObjectAccessError()
 
     post.title = title if (title is not None) else post.title
-    post.slug = slug if (slug is not None) else post.slug
-    post.content = content if (content is not None) else post.content
+
     if tags is not None:
         for tag in tags:
             if tag not in post.tags:
                 TagInterface.add(post, tag)
-    if active is not None:
+    if active is not None and not post.active:
         if active:
             post.published = datetime.utcnow()
         post.active = active
 
-    fields = (title, content, tags, slug, active)
+    if content is not None:
+        app.content.save(post.slug, post.version, post.format, content, post.domain)
+
+    fields = (title, tags, active)
     changed = any([f is not None for f in fields])
     if changed:
         db.session.add(post)

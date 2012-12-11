@@ -38,6 +38,7 @@ install_requires = [
     'flask-seasurf',
     'SQLAlchemy',
     'psycopg2==2.4.5',
+    'boto==2.6.0',
 ]
 
 tests_require = [

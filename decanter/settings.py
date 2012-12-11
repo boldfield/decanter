@@ -22,6 +22,10 @@ class base(object):
     DEBUG = False
     TESTING = False
 
+    DEFAULT_CONTENT_DOMAIN = os.environ.get('DECANTER_DEFAULT_CONTENT_DOMAIN') or 'default'
+    S3_BUCKET = os.environ.get('DECANTER_S3_BUCKET')
+    S3_URL = os.environ.get('DECANTER_S3_URL')
+
     SESSION_COOKIE_DOMAIN = os.environ.get('DECANTER_COOKIE_DOMAIN')
     SESSION_COOKIE_NAME = 'decanter_session'
 

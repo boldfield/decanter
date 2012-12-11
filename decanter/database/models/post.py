@@ -33,17 +33,25 @@ class Post(DecanterBaseModel):
     author = db.relationship('User', backref='posts')
 
     active = db.Column(db.Boolean(), default=False)
+    published = db.Column(DateTimeTZ, nullable=True)
+
     title = db.Column(db.Unicode(255), nullable=False)
     subtitle = db.Column(db.Unicode(255), nullable=False)
-    content = db.Column(db.Text, nullable=False)
-    slug = db.Column(db.Unicode(255), nullable=False, unique=True, index=True)
-    published = db.Column(DateTimeTZ, nullable=True)
+    slug = db.Column(db.Unicode(255), nullable=False, index=True)
+    format = db.Column(db.Enum('txt', 'html', name='post_content_format_enum'))
+    version = db.Column(db.Integer, nullable=False, index=True)
+
+    domain = db.Column(db.Unicode(255), nullable=False, index=True)
+
+    location = db.Column(db.Unicode(255), nullable=False, unique=True)
 
     score = db.Column(db.BigInteger)
     tags = db.relationship('Tag',
                            secondary=post_tag,
                            backref=db.backref('posts', lazy='dynamic'))
-    _exposed_fields = ('id', 'parent_id', 'author_id', 'active', 'title', 'subtitle', 'content', 'slug', 'published')
+
+    __table_args__ = (db.UniqueConstraint(slug, version), {})
+    _exposed_fields = ('id', 'parent_id', 'author_id', 'active', 'title', 'subtitle', 'slug', 'published', 'format', 'location')
 
 
 class Comment(DecanterBaseModel):

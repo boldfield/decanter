@@ -66,7 +66,13 @@ class DC.admin.forms.Post extends kohelpers.form.Form
     @slug(@title().replace(" ", "-").toLowerCase()) unless @slug()
 
 
+post = new kohelpers.model.Schema()
+post.addField('content')
+post.mapDependentRemote('location', 'content')
+
 class DC.admin.models.Post extends kohelpers.model.Model
+
+  @schema: post
 
   @endpoint: (id) ->
     return "#{DC.app.apiRoot}/post/#{id}"
@@ -216,7 +222,7 @@ class DC.admin.PostEditPage extends DC.Page
         headers: headers,
         success: @getPostSuccess,
         type: 'GET',
-        url: endpoint
+        url: endpoint,
         xhrFields: { withCredentials: true }
       })
     callback()

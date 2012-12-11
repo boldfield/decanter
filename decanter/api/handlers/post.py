@@ -1,4 +1,4 @@
-from flask import request, abort, Blueprint
+from flask import request, abort, Blueprint, current_app as app
 from flask_security import current_user
 from flask.ext.login import login_required
 
@@ -53,13 +53,17 @@ def post_create():
     usr = current_user._get_current_object()
     data = request.json
     subtitle = data.get('subtitle', None)
+    format = data.get('format', 'txt')
+    domain = data.get('domain', app.config.get('DEFAULT_CONTENT_DOMAIN'))
     tags = data.get('tags', None)
     tags = [t.strip() for t in tags.split(',')] if tags else None
     p = post.create(usr,
                     data.get('slug'),
                     data.get('title'),
                     data.get('content'),
+                    format,
                     subtitle=subtitle,
+                    domain=domain,
                     tags=tags)
     return json_response(p.serialize(), 201)
 
@@ -120,7 +124,7 @@ def update(usr, p, data):
 
     kwargs = dict()
     for (k, v) in data.items():
-        if k in ('slug', 'title', 'content', 'tags', 'active'):
+        if k in ('title', 'content', 'tags', 'active'):
             kwargs[k] = v
     post.update(p, usr, **kwargs)
 

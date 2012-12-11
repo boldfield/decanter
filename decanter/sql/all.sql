@@ -43,11 +43,14 @@ CREATE TABLE "post" (
 "parent_id" int8,
 "author_id" int8 NOT NULL,
 "active" bool NOT NULL DEFAULT false,
+"published" timestamptz,
 "title" varchar(255) NOT NULL,
 "subtitle" varchar(255),
-"content" text NOT NULL,
 "slug" varchar(255) NOT NULL,
-"published" timestamptz,
+"format" post_content_format_enum NOT NULL,
+"version" int4 NOT NULL,
+"domain" varchar(255) NOT NULL,
+"location" varchar(255) NOT NULL,
 "score" int8,
 PRIMARY KEY ("id") 
 );

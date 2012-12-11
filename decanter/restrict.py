@@ -93,7 +93,7 @@ def crossdomain(origin=None, methods=None, headers=None,
             if not attach_to_all and request.method != 'OPTIONS':
                 return resp
             request_origin = request.headers.get('Origin')
-            response_origin = request_origin if request_origin in origin else origin[0]
+            response_origin = request_origin if request_origin in origin else ''
 
             h = resp.headers
 

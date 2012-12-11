@@ -44,10 +44,15 @@ class InstallDBController(controller.CementBaseController):
             db.session.execute(drop)
             db.session.execute('CREATE SCHEMA "%s";' % schema)
             db.session.execute('SET search_path TO "%s";' % schema)
+            db.session.execute(self.types())
             db.session.execute(self.sql())
             db.session.commit()
         finally:
             db.session.remove()
+
+    def types(self):
+        sql = self.load_sql('types.sql')
+        return sql
 
     def sql(self):
         sql = self.load_sql('all.sql')
