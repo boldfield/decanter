@@ -569,7 +569,12 @@ kohelpers.model.Schema = (function() {
     }
     this.model = cls;
     this.mapping = mapping != null ? mapping : {};
+    this.customFields = [];
   }
+
+  Schema.prototype.addField = function(field) {
+    return this.customFields.push(field);
+  };
 
   Schema.prototype.key = function(key, callback) {
     var _base, _ref3;
@@ -610,6 +615,36 @@ kohelpers.model.Schema = (function() {
       }));
     }
     return _results;
+  };
+
+  Schema.prototype.mapDependentRemote = function(source, target) {
+    return this.map(source, function(context) {
+      var callback, s, set, url,
+        _this = this;
+      if (context.observable) {
+        return context.data;
+      }
+      url = context.data;
+      s = ko.observable(context.data);
+      context.parent[target] = context.parent[target] || ko.observable();
+      set = function(resp) {
+        return context.parent[target](resp);
+      };
+      callback = function() {
+        return jQuery.ajax({
+          context: _this,
+          success: set,
+          error: function(resp) {
+            console.log('error');
+            return console.log(resp);
+          },
+          type: 'GET',
+          url: url
+        });
+      };
+      callback();
+      return s;
+    });
   };
 
   Schema.prototype.update = function(key, callback) {
@@ -673,7 +708,7 @@ kohelpers.model.Schema = (function() {
   };
 
   Schema.prototype.load = function(data, viewModel, onUpdate) {
-    var field, fields, k, v, _i, _len;
+    var f, field, fields, k, v, _i, _j, _len, _len1, _ref3;
     if (!viewModel && this.model) {
       viewModel = this.model();
     }
@@ -682,14 +717,19 @@ kohelpers.model.Schema = (function() {
     }
     ko.mapping.fromJS(data, this.mapping, viewModel);
     fields = [];
+    _ref3 = this.customFields;
+    for (_i = 0, _len = _ref3.length; _i < _len; _i++) {
+      f = _ref3[_i];
+      fields.push(f);
+    }
     for (k in data) {
       v = data[k];
       fields.push(k);
     }
     viewModel.fields = fields;
     if (onUpdate) {
-      for (_i = 0, _len = fields.length; _i < _len; _i++) {
-        field = fields[_i];
+      for (_j = 0, _len1 = fields.length; _j < _len1; _j++) {
+        field = fields[_j];
         viewModel[field].subscribe(onUpdate);
       }
     }
@@ -761,7 +801,7 @@ kohelpers.model.Model = (function() {
   };
 
   Model.prototype.save = function() {
-    var callback, endpoint, headers,
+    var callback, headers,
       _this = this;
     if (this.saving()) {
       return this;
@@ -772,7 +812,6 @@ kohelpers.model.Model = (function() {
     this.saving(true);
     this.processing(true);
     headers = {};
-    endpoint = this.endpoint;
     callback = function() {
       return jQuery.ajax({
         context: _this,
@@ -784,7 +823,7 @@ kohelpers.model.Model = (function() {
         headers: headers,
         success: _this.onSuccess,
         type: 'PUT',
-        url: endpoint,
+        url: _this.endpoint,
         xhrFields: {
           withCredentials: true
         }

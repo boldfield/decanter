@@ -9,6 +9,10 @@ class kohelpers.model.Schema
 
     @model = cls
     @mapping = mapping ? {}
+    @customFields = []
+
+  addField: (field) ->
+    @customFields.push(field)
 
   key: (key, callback) ->
     if key and callback
@@ -29,6 +33,29 @@ class kohelpers.model.Schema
         m = moment(context.data)
         return m if context.observable
         return ko.observable(m)
+
+  mapDependentRemote: (source, target) ->
+    @map source, (context) ->
+      return context.data if context.observable
+      url = context.data
+      s = ko.observable(context.data)
+      context.parent[target] = context.parent[target] or ko.observable()
+
+      set = (resp) ->
+        context.parent[target](resp)
+
+      callback = =>
+        jQuery.ajax({
+          context: this,
+          success: set,
+          error: (resp) ->
+            console.log('error')
+            console.log(resp)
+          type: 'GET',
+          url: url
+          })
+      callback()
+      return s
 
   update: (key, callback) ->
     if key and callback
@@ -74,6 +101,8 @@ class kohelpers.model.Schema
 
     ko.mapping.fromJS(data, @mapping, viewModel)
     fields = []
+    for f in @customFields
+      fields.push(f)
     for k, v of data
       fields.push(k)
     viewModel.fields = fields
@@ -133,7 +162,6 @@ class kohelpers.model.Model
     @saving(true)
     @processing(true)
     headers = {}
-    endpoint = @endpoint
     callback = =>
       jQuery.ajax({
         context: this,
@@ -145,7 +173,7 @@ class kohelpers.model.Model
         headers: headers,
         success: @onSuccess,
         type: 'PUT',
-        url: endpoint
+        url: @endpoint
         xhrFields: { withCredentials: true }
       })
 
