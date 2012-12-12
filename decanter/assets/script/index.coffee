@@ -92,7 +92,7 @@ post = new kohelpers.model.Schema()
 post.addField('content')
 post.mapDependentRemote('location', 'content')
 
-class DC.models.PostWithContent extends DC.admin.models.Post
+class DC.models.PostWithContent extends DC.models.Post
 
   @schema: post
 

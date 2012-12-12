@@ -1,3 +1,4 @@
+DC = window.DC = window.DC ? {}
 DC.admin ?= {}
 DC.admin.models ?= {}
 DC.admin.forms ?= {}
