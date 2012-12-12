@@ -3,12 +3,20 @@
 <div class="container">
   <form id="admin-post-update" data-bind="submit: form.submit">
     <label>
+      <span class="label">Post Domain</span>
+      <input name="domain"
+             type="text"
+             data-bind="value: form.domain, css: { error: form.isInvalid('domain') }"
+             placeholder="Post Domain"
+             autofocus="autofocus" />
+    </label>
+
+    <label>
       <span class="label">Post Title</span>
       <input name="title"
             type="text"
             data-bind="value: form.title, css: { error: form.isInvalid('title') }"
-            placeholder="Post Title"
-            autofocus="autofocus" />
+            placeholder="Post Title" />
     </label>
 
     <label>
@@ -17,6 +25,14 @@
             type="text"
             data-bind="value: form.slug, valueUpdate: 'afterkeydown', css: { error: form.isInvalid('slug') }"
             placeholder="Post Slug" />
+    </label>
+
+    <label>
+      <span class="label">Format</span>
+      <select class="large"
+              name="format"
+              data-bind="options: form.availableFormats, value: form.format, css: { error: form.isInvalid('format') }">
+      </select>
     </label>
 
     <label>

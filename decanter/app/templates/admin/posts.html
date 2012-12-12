@@ -5,20 +5,24 @@
     <table>
       <tr>
         <td>ID</td>
+        <td>Domain</td>
         <td>Author</td>
         <td>Title</td>
         <td>Subtitle</td>
         <td>Slug</td>
+        <td>Format</td>
         <td>Active</td>
         <td></td>
       </tr>
       <tbody data-bind="foreach: posts.models">
         <tr class="data-row">
           <td data-bind="text: id"></td>
+          <td data-bind="text: domain"></td>
           <td data-bind="text: author_id"></td>
           <td data-bind="text: title"></td>
           <td data-bind="text: subtitle"></td>
           <td data-bind="text: slug"></td>
+          <td data-bind="text: format"></td>
           <td><input type="checkbox" data-bind="checked: active, attr: { name: activeFieldName }"/></td>
           <td><a href="#" data-bind="attr: { href: editLink }">edit</a></td>
         </tr>

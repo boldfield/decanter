@@ -25,9 +25,17 @@ class DC.admin.forms.Post extends kohelpers.form.Form
     @endpoint = "#{DC.app.apiRoot}/post/#{@model.id()}" unless @endpoint
 
     @field
+      name: 'domain',
+      label: 'Domain',
+      value: @model?.domain or undefined,
+      validators: [
+        new kohelpers.validate.Required(name: 'Domain')
+      ]
+
+    @field
       name: 'title',
       label: 'Title',
-      value: @model?.title or undefined
+      value: @model?.title or undefined,
       validators: [
         new kohelpers.validate.Required(name: 'Title')
       ]
@@ -35,7 +43,7 @@ class DC.admin.forms.Post extends kohelpers.form.Form
     @field
       name: 'slug',
       label: 'Slug',
-      value: @model?.slug or undefined
+      value: @model?.slug or undefined,
       validators: [
         new kohelpers.validate.Required(name: 'Slug')
       ]
@@ -43,32 +51,38 @@ class DC.admin.forms.Post extends kohelpers.form.Form
     @field
       name: 'content',
       label: 'Content',
-      value: @model?.content or undefined
+      value: @model?.content or undefined,
       validators: [
         new kohelpers.validate.Required(name: 'Content')
       ]
 
     @field
       name: 'id',
-      value: @model?.id or undefined
+      value: @model?.id or undefined,
       validators: [
       ]
 
     @field
       name: 'author_id',
-      value: @model?.author_id or undefined
+      value: @model?.author_id or undefined,
       validators: [
       ]
 
+    @field
+      name: 'format',
+      value: @model?.format or undefined,
+      validators: [
+        new kohelpers.validate.Required(name: 'Format')
+      ]
+
     @title.subscribe(@defaultSlug)
+    @availableFormats = ko.observableArray(['txt', 'html'])
 
   defaultSlug: =>
-    @slug(@title().replace(" ", "-").toLowerCase()) unless @slug()
+    whiteSpace = /\s/g
+    allowedChars = /[^a-z^0-9^-]/g
+    @slug(@title().replace(whiteSpace, "-").toLowerCase().replace(allowedChars, ""))
 
-
-post = new kohelpers.model.Schema()
-post.addField('content')
-post.mapDependentRemote('location', 'content')
 
 class DC.admin.models.Post extends kohelpers.model.Model
 
@@ -89,6 +103,15 @@ class DC.admin.models.Post extends kohelpers.model.Model
 
   activeFieldName: ->
     return "post-#{@id()}-active"
+
+
+post = new kohelpers.model.Schema()
+post.addField('content')
+post.mapDependentRemote('draft', 'content')
+
+class DC.admin.models.PostWithContent extends DC.admin.models.Post
+
+  @schema: post
 
 
 class DC.admin.models.PostContainer extends kohelpers.model.ModelContainer
@@ -195,8 +218,11 @@ class DC.admin.PostEditPage extends DC.Page
 
   constructor: (config) ->
     config ?= {}
-    @post = new DC.admin.models.Post({
+
+    @post = new DC.admin.models.PostWithContent({
       id: config.postId,
+      format: undefined,
+      domain: undefined,
       author_id: undefined,
       title: undefined,
       slug: undefined,
@@ -204,6 +230,7 @@ class DC.admin.PostEditPage extends DC.Page
       active: false
     })
     @getPost(config.postId)
+
     @form = new DC.admin.forms.Post({
       model: @post,
       method: 'PUT'
