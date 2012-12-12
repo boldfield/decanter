@@ -43,7 +43,7 @@ kohelpers-js-min:
     filters: uglifyjs
     debug: False
     contents:
-        - app-js
+        - kohelpers-js
 
 app-css:
     output: ../static/style/decanter/app.css
