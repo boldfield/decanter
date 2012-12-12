@@ -82,9 +82,6 @@ class DC.models.Post extends kohelpers.model.Model
 
   constructor: (config) ->
     super(config)
-    @editLink = ko.computed(@editLink, this)
-    @activeFieldName = ko.computed(@activeFieldName, this)
-
     @endpoint = "#{DC.app.apiRoot}/post/#{@id()}"
 
 
