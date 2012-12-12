@@ -1,6 +1,6 @@
 from flask import request, abort, Blueprint, current_app as app
 from flask_security import current_user
-from flask.ext.login import login_required
+from flask.ext.login import login_required, AnonymousUser
 
 from decanter import Decanter
 from decanter.negotiate import accepts
@@ -20,17 +20,29 @@ plan = Blueprint('post', __name__, url_prefix='/post')
 @plan.route('/', methods=['GET', 'OPTIONS'])
 @crossdomain(origin=Decanter.xhr_allow_origin, headers='Content-Type')
 def post_read():
-    c = post.get()
-    return json_response([i.serialize() for i in c], 200)
+    usr = current_user._get_current_object()
+    add_fields = list()
+    if isinstance(usr, AnonymousUser):
+        c = post.get()
+    else:
+        c = post.get(filter_inactive=False)
+        add_fields.extend(['draft'])
+    return json_response([i.serialize(add_fields=add_fields) for i in c], 200)
 
 
 @plan.route('/<int:post_id>', methods=['GET', 'OPTIONS'])
 @crossdomain(origin=Decanter.xhr_allow_origin, headers='Content-Type')
 def post_read_instance_by_id(post_id):
+    usr = current_user._get_current_object()
+    add_fields = list()
+    if not isinstance(usr, AnonymousUser):
+        add_fields.extend(['draft'])
+
     p = post.get_by_id(post_id)
     if not p:
         return abort(404)
-    return json_response(p.serialize(), 200)
+
+    return json_response(p.serialize(add_fields=add_fields), 200)
 
 
 @plan.route('/<string:post_slug>', methods=['GET', 'OPTIONS'])
@@ -122,11 +134,20 @@ def update(usr, p, data):
     if 'tags' in data:
         data['tags'] = [t.strip() for t in data['tags'].split(',')]
 
+    activate = False
+    if 'active' in data:
+        activate = True
+        is_active = data['active']
+        del data['active']
+
     kwargs = dict()
     for (k, v) in data.items():
-        if k in ('title', 'content', 'tags', 'active'):
+        if k in ('title', 'content', 'tags'):
             kwargs[k] = v
     post.update(p, usr, **kwargs)
+
+    if activate:
+        post.publish(p, usr, is_active=is_active)
 
     return json_response(p.serialize(), 200)
 

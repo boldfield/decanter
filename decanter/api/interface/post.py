@@ -7,14 +7,16 @@ from flask import current_app as app
 from decanter.database import db
 from decanter.database.models import Post
 from decanter.exceptions import (ObjectNotFoundError,
-                                 UnauthorizedObjectAccessError,
-                                 InvalidSettingsError)
+                                 UnauthorizedObjectAccessError)
 
 __all__ = ('get', 'create', 'update', 'delete')
 
 
-def get():
-    posts = Post.query.order_by(Post.id).all()
+def get(filter_inactive=True):
+    posts = Post.query
+    if filter_inactive:
+        posts = posts.filter_by(active=True)
+    posts = posts.order_by(Post.id).all()
     return posts
 
 
@@ -42,7 +44,7 @@ def create(user, slug, title, content, format, subtitle=None, domain=None, tags=
     if domain is None:
         domain = app.config.get('DEFAULT_CONTENT_DOMAIN')
 
-    version = _increment_version(slug)
+    version = 'draft'
     app.content.save(slug, version, format, content, domain)
 
     p = Post()
@@ -52,7 +54,8 @@ def create(user, slug, title, content, format, subtitle=None, domain=None, tags=
     p.format = format
     p.version = version
     p.domain = domain
-    p.location = app.content.url(slug, version, format, domain)
+    p.location = app.content.url(slug, 'published', format, domain)
+    p.draft = app.content.url(slug, version, format, domain)
 
     if subtitle is not None:
         p.subtitle = subtitle
@@ -68,15 +71,6 @@ def create(user, slug, title, content, format, subtitle=None, domain=None, tags=
     return p
 
 
-def _increment_version(slug):
-    post = Post.query.filter_by(slug=slug)\
-                     .order_by(desc(Post.id)).first()
-    version = 1
-    if post:
-        version = post.version + 1
-    return version
-
-
 def update(post, user, title=None, content=None, tags=None, active=None):
     from decanter.api.interface import tag as TagInterface
 
@@ -90,20 +84,40 @@ def update(post, user, title=None, content=None, tags=None, active=None):
         for tag in tags:
             if tag not in post.tags:
                 TagInterface.add(post, tag)
-    if active is not None and not post.active:
-        if active:
-            post.published = datetime.utcnow()
-        post.active = active
 
     if content is not None:
-        app.content.save(post.slug, post.version, post.format, content, post.domain)
+        app.content.version_copy(post.slug, post.format,
+                                 post.domain, 'draft', 'backup')
+        app.content.save(post.slug, 'draft',
+                         post.format, content, post.domain)
+        post.pending_update = True
 
-    fields = (title, tags, active)
+    fields = (title, tags, active, content)
     changed = any([f is not None for f in fields])
     if changed:
         db.session.add(post)
         db.session.commit()
     return post
+
+
+def publish(post, user, is_active=False):
+    if not is_active:
+        return _unpublish(post)
+    app.content.version_copy(post.slug, post.format, post.domain,
+                             'draft', 'published', readable=True)
+    post.active = True
+    post.published = datetime.utcnow()
+    db.session.add(post)
+    db.session.commit()
+
+
+def _unpublish(post):
+    if not post.active:
+        return
+    app.content.delete(post.slug, 'published', post.format, post.domain)
+    post.active = False
+    db.session.add(post)
+    db.session.commit()
 
 
 def delete(pid, user):
