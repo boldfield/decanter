@@ -1,4 +1,5 @@
 DC = window.DC = window.DC ? {}
+DC.models ?= {}
 
 
 class DC.Application
@@ -71,3 +72,35 @@ class DC.Page
 
   constructor: (config) ->
     config ?= {}
+
+class DC.models.Post extends kohelpers.model.Model
+
+  @schema: post
+
+  @endpoint: (id) ->
+    return "#{DC.app.apiRoot}/post/#{id}"
+
+  constructor: (config) ->
+    super(config)
+    @editLink = ko.computed(@editLink, this)
+    @activeFieldName = ko.computed(@activeFieldName, this)
+
+    @endpoint = "#{DC.app.apiRoot}/post/#{@id()}"
+
+
+post = new kohelpers.model.Schema()
+post.addField('content')
+post.mapDependentRemote('location', 'content')
+
+class DC.models.PostWithContent extends DC.admin.models.Post
+
+  @schema: post
+
+
+class DC.models.PostContainer extends kohelpers.model.ModelContainer
+
+  model: DC.models.Post
+
+  constructor: (config) ->
+    super(config)
+    @endpoint = "#{DC.app.apiRoot}/post/"
