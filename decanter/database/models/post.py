@@ -34,24 +34,24 @@ class Post(DecanterBaseModel):
 
     active = db.Column(db.Boolean(), default=False)
     published = db.Column(DateTimeTZ, nullable=True)
+    pending_update = db.Column(db.Boolean(), default=True)
 
     title = db.Column(db.Unicode(255), nullable=False)
     subtitle = db.Column(db.Unicode(255), nullable=False)
-    slug = db.Column(db.Unicode(255), nullable=False, index=True)
+    slug = db.Column(db.Unicode(255), nullable=False, index=True, unique=True)
     format = db.Column(db.Enum('txt', 'html', name='post_content_format_enum'))
-    version = db.Column(db.Integer, nullable=False, index=True)
 
     domain = db.Column(db.Unicode(255), nullable=False, index=True)
 
     location = db.Column(db.Unicode(255), nullable=False, unique=True)
+    draft = db.Column(db.Unicode(255), nullable=False, unique=True)
 
     score = db.Column(db.BigInteger)
     tags = db.relationship('Tag',
                            secondary=post_tag,
                            backref=db.backref('posts', lazy='dynamic'))
 
-    __table_args__ = (db.UniqueConstraint(slug, version), {})
-    _exposed_fields = ('id', 'parent_id', 'author_id', 'active', 'title', 'subtitle', 'slug', 'published', 'format', 'location')
+    _exposed_fields = ('id', 'parent_id', 'author_id', 'active', 'title', 'subtitle', 'slug', 'domain', 'published', 'format', 'location')
 
 
 class Comment(DecanterBaseModel):
