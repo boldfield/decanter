@@ -4,9 +4,14 @@ from datetime import datetime
 
 class SerializationMixin:
 
-    def serialize(self):
+    def serialize(self, add_fields=None):
         ret = dict()
-        for field in self._exposed_fields:
+        fields = list(self._exposed_fields)
+        if add_fields is not None:
+            if not isinstance(add_fields, (list, tuple)):
+                add_fields = [add_fields]
+            fields.extend(add_fields)
+        for field in fields:
             value = getattr(self, field)
             ret[field] = self._serialize(value)
         return ret
