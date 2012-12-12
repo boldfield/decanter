@@ -38,3 +38,5 @@ pip-log.txt
 # Script build files
 decanter.js
 decanter.min.js
+decanter-admin.js
+decanter-admin.min.js
