@@ -1,8 +1,8 @@
-{%- import 'macros/asset.html' as assets with context -%}
+{%- import 'decanter/macros/asset.html' as assets with context -%}
 <!doctype html>
 <head>
   <meta http-equiv="Content-type" content="text/html; charset=utf-8"/>
-  <title>{% block title -%}Test Site{% endblock -%}</title>
+  <title>{% block title -%}{% endblock -%}</title>
 
   {% block style -%}
   {{ assets.style('lib-css-min', debug='lib-css') }}
@@ -32,12 +32,11 @@
 
   {% block flash_messages -%}
   <section id="flash-messages">
-    {% include "snippets/flash.html" %}
+    {% include "decanter/snippets/flash.html" %}
   </section>
   {% endblock -%}
 
   {% block body -%}
-  <h1>Hello World! From base.html</h1>
   {% endblock -%}
 
   <footer>

@@ -1,9 +1,14 @@
+import os
+
+from decanter import DIR
 from decanter.base import App
 from decanter.admin.handlers import admin, auth
 
+TEMPLATE = os.path.join(DIR, 'templates')
 
 def create_app():
-    app = Admin(__name__)
+    app = Admin(__name__,
+                template_folder=TEMPLATE)
     return app
 
 

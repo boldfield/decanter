@@ -11,31 +11,31 @@ plan = Blueprint('admin', __name__)
 @plan.route('/', methods=['GET'])
 @login_required
 def index():
-    return render_template('admin/index.html')
+    return render_template('decanter/admin/index.html')
 
 
 @plan.route('/users', methods=['GET'])
 @login_required
 def users_get():
-    return render_template('admin/users.html')
+    return render_template('decanter/admin/users.html')
 
 
 @plan.route('/groups', methods=['GET'])
 @login_required
 def group_get():
-    return render_template('admin/groups.html')
+    return render_template('decanter/admin/groups.html')
 
 
 @plan.route('/posts', methods=['GET'])
 @login_required
 def posts_get():
-    return render_template('admin/posts.html')
+    return render_template('decanter/admin/posts.html')
 
 
 @plan.route('/posts/create', methods=['GET'])
 @login_required
 def post_create_get():
-    return render_template('admin/post_create.html')
+    return render_template('decanter/admin/post_create.html')
 
 
 @plan.route('/posts/edit', methods=['GET'])
@@ -55,4 +55,4 @@ def post_edit_get(post_id):
     if p.author.id != usr.id:
         return abort(401)
 
-    return render_template('admin/post_edit.html', post_id=post_id)
+    return render_template('decanter/admin/post_edit.html', post_id=post_id)
