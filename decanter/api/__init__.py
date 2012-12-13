@@ -1,24 +1,21 @@
-from flask import Flask
-
-from decanter import settings, restrict, content
-from decanter import database
+from decanter.base import App
+from decanter import content
 
 
 def create_app():
-    app = Flask(__name__)
-    settings.init_app(app)
-    database.init_app(app)
-    restrict.init_app(app)
-    content.init_app(app)
-
-    register_blueprints(app)
-
+    app = API(__name__)
     return app
 
 
-def register_blueprints(app):
-    from decanter.api.handlers import post, user, role
+class API(App):
+    url_strict_slashes = False
 
-    app.register_blueprint(post.plan)
-    app.register_blueprint(user.plan)
-    app.register_blueprint(role.plan)
+    def configure(self):
+        super(API, self).configure()
+        content.init_app(self)
+
+    def register_blueprints(self):
+        from decanter.api.handlers import post, user, role
+        self.register_blueprint(post.plan)
+        self.register_blueprint(user.plan)
+        self.register_blueprint(role.plan)
