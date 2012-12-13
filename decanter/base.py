@@ -13,8 +13,11 @@ class App(Flask):
     project_root = DIR
 
     def __init__(self, *args, **kw):
+        self.settings_module = settings
+        if 'settings_module' in kw:
+            self.settings_module = kw['settings_module']
+            del kw['settings_module']
         super(App, self).__init__(*args, **kw)
-        self.settings_module = kw['settings_module'] if 'settings_module' in kw else settings
         self.configure()
 
         self.register_blueprints()
