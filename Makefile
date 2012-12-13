@@ -25,6 +25,7 @@ clean:
 	@rm -rf dist build
 
 deps:
+	@npm link
 	@$(SETUP) dev
 
 dist: clean assets
