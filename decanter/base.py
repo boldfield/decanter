@@ -10,9 +10,11 @@ from decanter import DIR, settings, restrict, database
 
 class App(Flask):
     url_strict_slashes = True
+    project_root = DIR
 
     def __init__(self, *args, **kw):
         super(App, self).__init__(*args, **kw)
+        self.settings_module = kw['settings_module'] if 'settings_module' in kw else settings
         self.configure()
 
         self.register_blueprints()
@@ -21,7 +23,7 @@ class App(Flask):
     def configure(self):
         self.url_map.strict_slashes = self.url_strict_slashes
 
-        settings.init_app(self)
+        self.settings_module.init_app(self)
         database.init_app(self)
         restrict.init_app(self)
 
@@ -31,13 +33,15 @@ class App(Flask):
     def configure_assets(self):
         self.assets = Environment(self)
         self.assets.auto_build = False
-        self.assets.directory = os.path.join(DIR, 'assets')
-        self.static_folder = os.path.join(DIR, 'static')
+        self.assets.directory = os.path.join(self.project_root, 'assets')
+        self.static_folder = os.path.join(self.project_root, 'static')
         self.assets.manifest = 'file'
         self.assets.url = '/static'
 
     def register_assets(self):
-        manifest = YAMLLoader(os.path.join(DIR, 'assets', 'manifest.yaml'))
+        manifest = YAMLLoader(os.path.join(self.project_root,
+                                           'assets',
+                                           'manifest.yaml'))
         manifest = manifest.load_bundles()
         [self.register_asset_bundle(n, manifest[n]) for n in manifest]
 
@@ -54,7 +58,8 @@ class App(Flask):
         tmpl_path = os.path.join(DIR, 'assets', 'decanter.yaml.tmpl')
         with open(tmpl_path, 'r') as fp:
             tmpl = fp.read()
-        tmpl %= dict(decanter_dir=DIR)
+        tmpl %= dict(decanter_dir=DIR,
+                     static_dir=self.static_folder)
         with open(path, 'w') as fp:
             fp.write(tmpl)
         return True

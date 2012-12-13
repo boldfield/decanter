@@ -1,17 +1,17 @@
 decanter-js:
-    output: ../static/script/decanter.js
+    output: %(static_dir)/script/decanter.js
     contents:
         - %(decanter_dir)s/static/lib.js
         - %(decanter_dir)s/static/kohelpers.js
         - %(decanter_dir)s/static/decanter.js
 
 decanter-js-min:
-    output: ../static/script/decanter.min.js
+    output: %(static_dir)/script/decanter.min.js
     contents:
         - decanter-js
 
 decanter-lib-css:
-    output: ../static/style/bootstrap.css
+    output: %(static_dir)/style/bootstrap.css
     filters: less
     debug: False
     contents:
@@ -19,7 +19,7 @@ decanter-lib-css:
         - %(decanter_dir)s/static/style/bootstrap-responsive-2.2.0.css
 
 decanter-lib-css-min:
-    output: ../static/style/bootstrap.min.css
+    output: %(static_dir)/style/bootstrap.min.css
     filters: yui_css
     debug: False
     contents:
