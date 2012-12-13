@@ -6,7 +6,7 @@ DIR = os.path.dirname(DIR)
 
 from werkzeug.wsgi import pop_path_info, peek_path_info
 
-from decanter.app import create_app as create_web_app
+from decanter.admin import create_app as create_admin_app
 from decanter.api import create_app as create_api_app
 from decanter.util import LoginManagerMixin
 
@@ -41,14 +41,14 @@ class Decanter(object, LoginManagerMixin):
             self.strip_paths.append(path)
 
         if admin_subdomain:
-            self.subdomains[admin_subdomain] = create_web_app
+            self.subdomains[admin_subdomain] = create_admin_app
             self._add_xhr_origin_for_subdomain(admin_subdomain, stage=self.stage_subdomain)
 
         if api_subdomain:
             self.subdomains[api_subdomain] = create_api_app
             self._add_xhr_origin_for_subdomain(api_subdomain, stage=self.stage_subdomain)
 
-        self.paths[admin_prefix or 'admin'] = create_web_app
+        self.paths[admin_prefix or 'admin'] = create_admin_app
         self.paths[api_prefix or 'api'] = create_api_app
 
     def __call__(self, environ, start_response):
@@ -126,4 +126,4 @@ class Decanter(object, LoginManagerMixin):
         return subdomain if subdomain != 'stage' else parts[1]
 
 
-app = Decanter(create_web_app)
+app = Decanter(create_admin_app)

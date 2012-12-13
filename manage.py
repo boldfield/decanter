@@ -1,7 +1,7 @@
 from cement.core import controller
 
 from decanter import app, cli
-from decanter.app import create_app
+from decanter.admin import create_app
 from decanter.cli import InstallDBController, CreateRoleController, CreateUserController
 
 

@@ -1,5 +1,5 @@
 from decanter.base import App
-from decanter.app.handlers import admin, auth
+from decanter.admin.handlers import admin, auth
 
 
 def create_app():
