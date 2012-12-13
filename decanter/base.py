@@ -10,6 +10,7 @@ from decanter import DIR, settings, restrict, database
 
 class App(Flask):
     url_strict_slashes = True
+    relative_static_path = '../static'
     project_root = DIR
 
     def __init__(self, *args, **kw):
@@ -62,7 +63,7 @@ class App(Flask):
         with open(tmpl_path, 'r') as fp:
             tmpl = fp.read()
         tmpl %= dict(decanter_dir=DIR,
-                     static_dir=self.static_folder)
+                     static_dir=self.relative_static_path)
         with open(path, 'w') as fp:
             fp.write(tmpl)
         return True
