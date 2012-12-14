@@ -1,7 +1,6 @@
 {% if config.GOOGLE_ANALYTICS_ID %}
 <script>
   {% if config.GOOGLE_ANALYTICS_DOMAIN %}
-  _gaq.push();
   var _gaq=[['_setAccount','{{ config.GOOGLE_ANALYTICS_ID }}'],['_setDomainName', '{{config.GOOGLE_ANALYTICS_DOMAIN}}'],['_trackPageview']];
   {% else %}
   var _gaq=[['_setAccount','{{ config.GOOGLE_ANALYTICS_ID }}'],[],['_trackPageview']];
