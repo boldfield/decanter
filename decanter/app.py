@@ -2,10 +2,12 @@ import os
 
 from webassets.loaders import YAMLLoader
 
-from flask import Flask
+from flask import Flask, Blueprint
 from flask.ext.assets import Environment
 
 from decanter import DIR, settings, restrict, database
+
+TEMPLATE = os.path.join(DIR, 'templates')
 
 
 class App(Flask):
@@ -70,6 +72,10 @@ class App(Flask):
 
     def register_blueprints(self):
         pass
+
+    def register_decanter_blueprint(self):
+        blueprint = Blueprint('decanter', __name__, template_folder=TEMPLATE)
+        self.register_blueprint(blueprint)
 
     def configure_context(self):
         self.context_processor(self._api_context)
