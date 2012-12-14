@@ -1,5 +1,5 @@
 recursive-include decanter/static *
-recursive-include decanter/app/templates *
+recursive-include decanter/templates *
 recursive-include decanter/sql *
 include decanter/assets/manifest.yaml
 include decanter/assets/decanter.yaml.tmpl
