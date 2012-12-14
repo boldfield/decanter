@@ -1,4 +1,4 @@
-from decanter.base import App
+from decanter.app import App
 from decanter import content
 
 
