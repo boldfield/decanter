@@ -42,7 +42,8 @@ class base(object):
     CSRF_COOKIE_NAME = 'decanter_csrf'
     CSRF_DISABLE = False
 
-    GOOGLE_ANALYTICS_ID = os.environ.get('DECANTER_GOOGLE_ANALYTICS_ID')
+    GOOGLE_ANALYTICS_ID = os.environ.get('GOOGLE_ANALYTICS_ID')
+    GOOGLE_ANALYTICS_DOMAIN = os.environ.get('GOOGLE_ANALYTICS_DOMAIN')
 
     API_PATH = os.environ.get('DECANTER_API_PATH')
     API_HOST = os.environ.get('DECANTER_API_HOST')

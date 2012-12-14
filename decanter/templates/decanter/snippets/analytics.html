@@ -1,0 +1,14 @@
+{% if config.GOOGLE_ANALYTICS_ID %}
+<script>
+  {% if config.GOOGLE_ANALYTICS_DOMAIN %}
+  _gaq.push();
+  var _gaq=[['_setAccount','{{ config.GOOGLE_ANALYTICS_ID }}'],['_setDomainName', '{{config.GOOGLE_ANALYTICS_DOMAIN}}'],['_trackPageview']];
+  {% else %}
+  var _gaq=[['_setAccount','{{ config.GOOGLE_ANALYTICS_ID }}'],[],['_trackPageview']];
+  {% endif %}
+
+  (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
+  g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
+  s.parentNode.insertBefore(g,s)}(document,'script'));
+</script>
+{% endif %}
