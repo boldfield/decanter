@@ -51,7 +51,7 @@ class Post(DecanterBaseModel):
                            secondary=post_tag,
                            backref=db.backref('posts', lazy='dynamic'))
 
-    _exposed_fields = ('id', 'parent_id', 'author_id', 'active', 'title', 'subtitle', 'slug', 'domain', 'published', 'format', 'location')
+    _exposed_fields = ('id', 'parent_id', 'author_id', 'active', 'title', 'subtitle', 'slug', 'domain', 'published', 'format', 'location', 'images')
 
 
 class Image(DecanterBaseModel):
@@ -66,7 +66,7 @@ class Image(DecanterBaseModel):
     location = db.Column(db.Unicode(255), nullable=False)
     thumbnail = db.Column(db.Unicode(255), nullable=False)
 
-    _exposed_fields = ('id', 'post_id', 'name', 'domain')
+    _exposed_fields = ('id', 'post_id', 'name', 'alt', 'domain', 'location', 'thumbnail')
 
 
 class Comment(DecanterBaseModel):
