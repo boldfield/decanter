@@ -103,6 +103,10 @@ class DC.admin.models.Post extends kohelpers.model.Model
   activeFieldName: ->
     return "post-#{@id()}-active"
 
+  image: (name) ->
+    for image in @images()
+      return image if image.name() == name
+
 
 post = new kohelpers.model.Schema()
 post.addField('content')

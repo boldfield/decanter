@@ -84,6 +84,10 @@ class DC.models.Post extends kohelpers.model.Model
     super(config)
     @endpoint = "#{DC.app.apiRoot}/post/#{@id()}"
 
+  image: (name) ->
+    for image in @images()
+      return image if image.name() == name
+
 
 post = new kohelpers.model.Schema()
 post.addField('content')
