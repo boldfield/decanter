@@ -1,6 +1,6 @@
 from flask import request, abort, Blueprint, current_app as app
 from flask_security import current_user
-from flask.ext.login import login_required, AnonymousUser
+from flask.ext.login import login_required
 
 from decanter import Decanter
 from decanter.api.interface import image, post
@@ -19,28 +19,18 @@ plan = Blueprint('image', __name__, url_prefix='/image')
 @plan.route('/', methods=['GET', 'OPTIONS'])
 @crossdomain(origin=Decanter.xhr_allow_origin, headers='Content-Type')
 def image_read():
-    usr = current_user._get_current_object()
-    add_fields = list()
     c = image.get()
-    if not isinstance(usr, AnonymousUser):
-        add_fields.extend(['location', 'thumbnail'])
-    add_fields = ['location', 'thumbnail']
-    return json_response([i.serialize(add_fields=add_fields) for i in c], 200)
+    return json_response([i.serialize() for i in c], 200)
 
 
 @plan.route('/<int:image_id>', methods=['GET', 'OPTIONS'])
 @crossdomain(origin=Decanter.xhr_allow_origin, headers='Content-Type')
 def image_read_instance_by_id(image_id):
-    usr = current_user._get_current_object()
-    add_fields = list()
-    if not isinstance(usr, AnonymousUser):
-        add_fields.extend(['location', 'thumbnail'])
-
     p = image.get_by_id(image_id)
     if not p:
         return abort(404)
 
-    return json_response(p.serialize(add_fields=add_fields), 200)
+    return json_response(p.serialize(), 200)
 
 
 @plan.route('/<string:image_name>', methods=['GET', 'OPTIONS'])
