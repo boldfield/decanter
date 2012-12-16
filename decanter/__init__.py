@@ -42,14 +42,19 @@ class Decanter(object, LoginManagerMixin):
 
         if admin_subdomain:
             self.subdomains[admin_subdomain] = create_admin_app
-            self._add_xhr_origin_for_subdomain(admin_subdomain, stage=self.stage_subdomain)
+            self._add_xhr_origin_for_subdomain(subdomain=admin_subdomain, stage=self.stage_subdomain)
 
         if api_subdomain:
             self.subdomains[api_subdomain] = create_api_app
-            self._add_xhr_origin_for_subdomain(api_subdomain, stage=self.stage_subdomain)
+            self._add_xhr_origin_for_subdomain(subdomain=api_subdomain, stage=self.stage_subdomain)
 
-        self.paths[admin_prefix or 'admin'] = create_admin_app
-        self.paths[api_prefix or 'api'] = create_api_app
+        if admin_prefix:
+            self.paths[admin_prefix] = create_admin_app
+        if api_prefix:
+            self.paths[api_prefix] = create_api_app
+
+        # Add naked DECANTER_DOMAINS
+        self._add_xhr_origin_for_subdomain()
 
     def __call__(self, environ, start_response):
         host = environ['HTTP_HOST']
@@ -73,20 +78,23 @@ class Decanter(object, LoginManagerMixin):
 
         return app(environ, start_response)
 
-    def _add_xhr_origin_for_subdomain(self, subdomain, stage=None):
+    def _add_xhr_origin_for_subdomain(self, subdomain=None, stage=None):
         for domain in self.xhr_domains:
             for schema in self.xhr_schema:
-                if stage is None:
+                if stage is None and subdomain is not None:
                     origin = '%s://%s.%s' % (schema, subdomain, domain)
                     self.xhr_allow_origin.append(origin)
-                else:
+                elif subdomain is not None:
                     origin = '%s://%s.%s.%s' % (schema, stage, subdomain, domain)
+                    self.xhr_allow_origin.append(origin)
+                else:
+                    origin = '%s://%s' % (schema, domain)
                     self.xhr_allow_origin.append(origin)
 
     def register_app(self, create_app, subdomain=None, path=None, strip_path=False):
         if subdomain:
             self.subdomains[subdomain] = create_app
-            self._add_xhr_origin_for_subdomain(subdomain, stage=self.stage_subdomain)
+            self._add_xhr_origin_for_subdomain(subdomain=subdomain, stage=self.stage_subdomain)
         if path:
             self.paths[path] = create_app
         if strip_path:
@@ -126,4 +134,4 @@ class Decanter(object, LoginManagerMixin):
         return subdomain if subdomain != 'stage' else parts[1]
 
 
-app = Decanter(create_admin_app)
+app = Decanter(create_admin_app, admin_prefix='admin', api_prefix='api')
