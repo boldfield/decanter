@@ -61,6 +61,7 @@ class Image(DecanterBaseModel):
     post = db.relationship('Post', backref='images')
 
     name = db.Column(db.Unicode(255), nullable=False, index=True)
+    alt = db.Column(db.Unicode(255), nullable=False)
     domain = db.Column(db.Unicode(255), nullable=False, index=True)
     location = db.Column(db.Unicode(255), nullable=False)
     thumbnail = db.Column(db.Unicode(255), nullable=False)
