@@ -1,4 +1,4 @@
-from flask import abort, redirect, Blueprint, render_template
+from flask import abort, redirect, Blueprint, render_template, url_for
 from flask.ext.login import current_user
 from flask.ext.login import login_required
 
@@ -36,6 +36,26 @@ def posts_get():
 @login_required
 def post_create_get():
     return render_template('decanter/admin/post_create.html')
+
+
+@plan.route('/images', methods=['GET'])
+@login_required
+def images_get():
+    return render_template('decanter/admin/images.html')
+
+
+@plan.route('/images/create', methods=['GET'])
+@login_required
+def image_create_get():
+    return render_template('decanter/admin/image_create.html')
+
+
+@plan.route('/images/create', methods=['POST'])
+@login_required
+def image_create_post():
+    from decanter.api.handlers import image
+    image.image_create()
+    return redirect(url_for('admin.images_get'))
 
 
 @plan.route('/posts/edit', methods=['GET'])

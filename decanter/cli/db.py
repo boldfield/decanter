@@ -64,6 +64,75 @@ class InstallDBController(controller.CementBaseController):
             return ''.join(fd.readlines())
 
 
+class DBMigrationController(controller.CementBaseController):
+
+    class Meta:
+        label = 'db_migrate'
+        description = "Perform a migration on the decanter database."
+        arguments = [
+            (['-c', '--connection'], {
+                'action': 'store',
+                'help': 'Connection string to use for the database connection',
+                'default': 'postgresql://localhost/decanter',
+            }),
+            (['-s', '--schema'], {
+                'action': 'store',
+                'help': 'Schema to install into',
+                'default': 'public',
+            }),
+            (['-m', '--migration'], {
+                'action': 'store',
+                'help': 'migration to perform',
+            }),
+            (['-l', '--list'], {
+                'action': 'store_true',
+                'help': 'list available migrations',
+            }),
+        ]
+
+    @controller.expose(hide=True, help='Install the database')
+    def default(self):
+        if self.pargs.list:
+            self.list_migrations()
+            return
+        if not self.pargs.migration:
+            print "Please select either --list or --migration <migration name>"
+            return
+
+        connection = self.pargs.connection
+
+        db.init_connection({
+            'SQLALCHEMY_DATABASE_URI': connection,
+            'SQLALCHEMY_ECHO': True
+        })
+
+        try:
+            schema = self.pargs.schema
+            db.session.execute('SET search_path TO "%s";' % schema)
+            db.session.execute(self.migration(self.pargs.migration))
+            db.session.commit()
+        finally:
+            db.session.remove()
+
+    def migration(self, migration):
+        fname = "%s.sql" % migration
+        sql = self.load_sql(fname)
+        return sql
+
+    def load_sql(self, *path):
+        with open(os.path.join(decanter.DIR, 'sql', 'migrations', *path), 'r') as fd:
+            return ''.join(fd.readlines())
+
+    def list_migrations(self):
+        print "Available Migrations:"
+        DIR = os.path.join(decanter.DIR, 'sql', 'migrations')
+        files = os.listdir(DIR)
+        for f in files:
+            if os.path.isfile(os.path.join(DIR, f)):
+                if f.endswith('.sql'):
+                    print "  * %s" % f.replace('.sql', '')
+
+
 class CreateRoleController(controller.CementBaseController):
 
     class Meta:

@@ -54,6 +54,20 @@ class Post(DecanterBaseModel):
     _exposed_fields = ('id', 'parent_id', 'author_id', 'active', 'title', 'subtitle', 'slug', 'domain', 'published', 'format', 'location')
 
 
+class Image(DecanterBaseModel):
+    __tablename__ = 'image'
+
+    post_id = db.Column(db.BigInteger, db.ForeignKey('post.id'), index=True)
+    post = db.relationship('Post', backref='images')
+
+    name = db.Column(db.Unicode(255), nullable=False, index=True)
+    domain = db.Column(db.Unicode(255), nullable=False, index=True)
+    location = db.Column(db.Unicode(255), nullable=False)
+    thumbnail = db.Column(db.Unicode(255), nullable=False)
+
+    _exposed_fields = ('id', 'post_id', 'name', 'domain')
+
+
 class Comment(DecanterBaseModel):
     __tablename__ = 'comment'
 

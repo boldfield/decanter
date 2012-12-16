@@ -1,0 +1,45 @@
+{% extends 'decanter/admin/base.html' %}
+{% block body %}
+<div class="container">
+  <form id="admin-post-create" enctype="multipart/form-data" method="POST">
+    <label>
+      <span class="label">Post Domain</span>
+      <input name="domain"
+            type="text"
+            placeholder="Image Domain"
+            autofocus="autofocus" />
+    </label>
+
+    <label>
+      <span class="label">Post Title</span>
+      <input name="name"
+            type="text"
+            placeholder="Image Name" />
+    </label>
+
+    <label>
+      <span class="label">Post Slug</span>
+      <input name="post-slug"
+            type="text"
+            placeholder="Associated Post" />
+    </label>
+
+    <label>
+      <span class="label">Post Slug</span>
+      <input name="image"
+            type="file"
+            placeholder="Image File" />
+    </label>
+
+    <input class="btn" type="submit" value="Save">
+    <a class="btn" data-bind="click: cancel"/>Cancel</a>
+  </form>
+</div>
+{% endblock %}
+
+{% block init_page %}
+  <script type="text/javascript">
+    DC.admin.ImageCreatePage.init({
+    });
+  </script>
+{% endblock %}

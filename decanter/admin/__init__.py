@@ -1,5 +1,6 @@
 from decanter.app import App
 from decanter.admin.handlers import admin, auth
+from decanter import content
 
 
 def create_app():
@@ -10,6 +11,10 @@ def create_app():
 
 class Admin(App):
     url_strict_slashes = False
+
+    def configure(self):
+        super(Admin, self).configure()
+        content.init_app(self)
 
     def register_blueprints(self):
         self.register_blueprint(auth.plan)

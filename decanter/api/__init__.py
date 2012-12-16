@@ -15,7 +15,8 @@ class API(App):
         content.init_app(self)
 
     def register_blueprints(self):
-        from decanter.api.handlers import post, user, role
+        from decanter.api.handlers import post, image, user, role
         self.register_blueprint(post.plan)
+        self.register_blueprint(image.plan)
         self.register_blueprint(user.plan)
         self.register_blueprint(role.plan)

@@ -1,2 +1,2 @@
-from .post import Post, Comment, CommentRating, PostRating, Tag
+from .post import Post, Image, Comment, CommentRating, PostRating, Tag
 from .user import Role, User

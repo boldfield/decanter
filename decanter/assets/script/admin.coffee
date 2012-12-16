@@ -87,8 +87,6 @@ class DC.admin.forms.Post extends kohelpers.form.Form
 
 class DC.admin.models.Post extends kohelpers.model.Model
 
-  @schema: post
-
   @endpoint: (id) ->
     return "#{DC.app.apiRoot}/post/#{id}"
 
@@ -110,9 +108,20 @@ post = new kohelpers.model.Schema()
 post.addField('content')
 post.mapDependentRemote('draft', 'content')
 
+
 class DC.admin.models.PostWithContent extends DC.admin.models.Post
 
   @schema: post
+
+
+class DC.admin.models.Image extends kohelpers.model.Model
+
+  @endpoint: (id) ->
+    return "#{DC.app.apiRoot}/image/#{id}"
+
+  constructor: (config) ->
+    super(config)
+    @endpoint = "#{DC.app.apiRoot}/post/#{@id()}"
 
 
 class DC.admin.models.PostContainer extends kohelpers.model.ModelContainer
@@ -122,6 +131,15 @@ class DC.admin.models.PostContainer extends kohelpers.model.ModelContainer
   constructor: (config) ->
     super(config)
     @endpoint = "#{DC.app.apiRoot}/post/"
+
+
+class DC.admin.models.ImageContainer extends kohelpers.model.ModelContainer
+
+  model: DC.admin.models.Image
+
+  constructor: (config) ->
+    super(config)
+    @endpoint = "#{DC.app.apiRoot}/image/"
 
 
 class DC.admin.models.User extends kohelpers.model.Model
@@ -186,6 +204,17 @@ class DC.admin.PostsPage extends DC.Page
     e.preventDefault()
     window.location = "#{DC.app.adminPath}/posts/create"
 
+
+class DC.admin.ImagesPage extends DC.Page
+
+  constructor: (config) ->
+    @posts = new DC.admin.models.ImageContainer()
+    @posts.load()
+
+  newImage: (context, e) ->
+    e.preventDefault()
+    window.location = "#{DC.app.adminPath}/images/create"
+
 class DC.admin.UsersPage extends DC.Page
 
   constructor: (config) ->
@@ -214,6 +243,20 @@ class DC.admin.PostCreatePage extends DC.Page
 
   back: ->
     window.location = "#{DC.app.adminPath}/posts"
+
+
+class DC.admin.ImageCreatePage extends DC.Page
+
+  constructor: (config) ->
+    super(config)
+    @endpoint = "#{DC.app.apiRoot}/image"
+
+  cancel: ->
+    @back()
+
+  back: ->
+    window.location = "#{DC.app.adminPath}/images"
+
 
 class DC.admin.PostEditPage extends DC.Page
 

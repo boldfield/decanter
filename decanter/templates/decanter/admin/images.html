@@ -1,0 +1,36 @@
+{% extends 'decanter/admin/base.html' %}
+{% block body %}
+<div class="container">
+  <form id="admin-post-update" data-bind="submit: posts.commitUpdated">
+    <table>
+      <tr>
+        <td>ID</td>
+        <td>Domain</td>
+        <td>Name</td>
+        <td>Post</td>
+        <td>Location</td>
+        <td>Thumbnail</td>
+        <td></td>
+      </tr>
+      <tbody data-bind="foreach: posts.models">
+        <tr class="data-row">
+          <td data-bind="text: id"></td>
+          <td data-bind="text: domain"></td>
+          <td data-bind="text: name"></td>
+          <td data-bind="text: post_id"></td>
+          <td ><a target="_blank" data-bind="text: location, attr: { href: location }"></a></td>
+          <td ><a target="_blank" data-bind="text: thumbnail, attr: { href: thumbnail }"></a></td>
+        </tr>
+      </tbody>
+    </table>
+    <a class="btn" data-bind="click: newImage"/>New</a>
+  </form>
+</div>
+{% endblock %}
+
+{% block init_page %}
+  <script type="text/javascript">
+    DC.admin.ImagesPage.init({
+    });
+  </script>
+{% endblock %}

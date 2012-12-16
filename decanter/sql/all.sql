@@ -12,13 +12,6 @@ PRIMARY KEY ("id")
 
 CREATE UNIQUE INDEX "user_username_index" ON "user" ("username");
 
-CREATE TABLE "base" (
-"id" serial8 NOT NULL,
-"created" timestamptz NOT NULL,
-"modified" timestamptz NOT NULL,
-PRIMARY KEY ("id") 
-);
-
 CREATE TABLE "role" (
 "id" serial8 NOT NULL,
 "created" timestamptz NOT NULL,
@@ -113,6 +106,20 @@ CREATE TABLE "comment_tag" (
 PRIMARY KEY ("id") 
 );
 
+CREATE TABLE "image" (
+"id" serial8 NOT NULL,
+"created" timestamptz NOT NULL,
+"modified" timestamptz NOT NULL,
+"post_id" int8,
+"name" varchar(255) NOT NULL,
+"domain" varchar(255) NOT NULL,
+"location" varchar(255) NOT NULL,
+"thumbnail" varchar(255),
+PRIMARY KEY ("id") 
+);
+
+CREATE UNIQUE INDEX "image_name_index" ON "image" ("name");
+
 
 ALTER TABLE "roles_users" ADD CONSTRAINT "roles_users_user_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "user" ("id");
 ALTER TABLE "roles_users" ADD CONSTRAINT "roles_users_role_role_id_fk" FOREIGN KEY ("role_id") REFERENCES "role" ("id");
@@ -129,4 +136,5 @@ ALTER TABLE "post_tag" ADD CONSTRAINT "post_tag_tag_id_tag_id_fk" FOREIGN KEY ("
 ALTER TABLE "post_tag" ADD CONSTRAINT "post_tag_post_id_post_id_fk" FOREIGN KEY ("post_id") REFERENCES "post" ("id");
 ALTER TABLE "comment_tag" ADD CONSTRAINT "comment_tag_comment_id_comment_id_fk" FOREIGN KEY ("comment_id") REFERENCES "comment" ("id");
 ALTER TABLE "comment_tag" ADD CONSTRAINT "comment_tag_tag_id_tag_id_fk" FOREIGN KEY ("tag_id") REFERENCES "tag" ("id");
+ALTER TABLE "image" ADD CONSTRAINT "image_post_id_post_id_fk" FOREIGN KEY ("post_id") REFERENCES "post" ("id");
 
