@@ -52,6 +52,7 @@ def image_create():
     image_file = request.files['image']
     data = request.form
     name = data.get('name')
+    alt = data.get('alt')
     domain = data.get('domain', app.config.get('DEFAULT_CONTENT_DOMAIN'))
     post_slug = data.get('post-slug', None)
     if post_slug is not None:
@@ -59,7 +60,8 @@ def image_create():
     i = image.create(image_file,
                      name,
                      domain=domain,
-                     post=p)
+                     post=p,
+                     alt=alt)
     return json_response(i.serialize(), 201)
 
 

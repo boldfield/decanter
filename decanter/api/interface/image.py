@@ -4,6 +4,7 @@ from decanter.database import db
 from decanter.database.models import Image
 from decanter.exceptions import ObjectNotFoundError
 
+
 class DuplicateImageNameError(Exception):
     pass
 
@@ -24,7 +25,7 @@ def get_by_name(name):
     return p
 
 
-def create(image, name, domain=None, post=None):
+def create(image, name, domain=None, post=None, alt=None):
     if domain is None:
         domain = app.config.get('DEFAULT_CONTENT_DOMAIN')
 
@@ -41,6 +42,8 @@ def create(image, name, domain=None, post=None):
     i.thumbnail = None
     if post is not None:
         i.post_id = post.id
+    if alt is not None:
+        i.alt = alt
 
     db.session.add(i)
     db.session.commit()

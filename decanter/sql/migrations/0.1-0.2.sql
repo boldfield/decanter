@@ -4,6 +4,7 @@ CREATE TABLE "image" (
     "modified" timestamptz NOT NULL,
     "post_id" int8,
     "name" varchar(255) NOT NULL,
+    "alt" varchar(255),
     "domain" varchar(255) NOT NULL,
     "location" varchar(255) NOT NULL,
     "thumbnail" varchar(255),
