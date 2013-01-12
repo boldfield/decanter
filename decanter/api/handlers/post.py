@@ -145,30 +145,19 @@ def update(usr, p, data):
         if k in ('title', 'content', 'tags'):
             kwargs[k] = v
     post.update(p, usr, **kwargs)
+    expire_existing = app.hasattr('cdn')
 
     if activate:
         post.publish(p, usr, is_active=is_active)
+        if expire_existing:
+            expire_url = p.location
+    else:
+        if expire_existing:
+            expire_url = p.draft
+
+    if expire_existing:
+        # Returns true if successful
+        # TODO :: Log result.
+        app.cdn.expire_url(expire_url)
 
     return json_response(p.serialize(), 200)
-
-
-##############################
-#       Delete Handlers      #
-##############################
-@plan.route('/<int:company_id>', methods=['DELETE'])
-def company_delete(company_id):
-    if not current_user.is_authenticated():
-        return abort(403)
-
-    try:
-        company.delete(current_user, company_id)
-    except (ObjectNotFoundError, UnauthorizedObjectAccessError):
-        # In either instance, return a not found response
-        return abort(404)
-
-    # TODO :: This response needs to make sense.
-    return json_response([0], 204)
-
-
-def _attributes_from_request():
-    pass

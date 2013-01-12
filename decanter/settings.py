@@ -48,6 +48,9 @@ class base(object):
     API_PATH = os.environ.get('DECANTER_API_PATH')
     API_HOST = os.environ.get('DECANTER_API_HOST')
 
+    CLOUDFLARE_EMAIL = os.environ.get('DECANTER_CLOUDFLARE_EMAIL')
+    CLOUDFLARE_API_TOKEN = os.environ.get('DECANTER_CLOUDFLARE_API_TOKEN')
+
 
 class dev(base):
     DEBUG = True

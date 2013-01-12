@@ -6,6 +6,7 @@ from flask import Flask, Blueprint
 from flask.ext.assets import Environment
 
 from decanter import DIR, settings, restrict, database
+from decanter.cdn import init_app as init_cdn
 
 TEMPLATE = os.path.join(DIR, 'templates')
 
@@ -43,6 +44,9 @@ class App(Flask):
         self.static_folder = os.path.join(self.project_root, 'static')
         self.assets.manifest = 'file'
         self.assets.url = '/static'
+
+    def init_cdnmanager(self, cdnmanager=None):
+        init_cdn(self, cdnmanager=cdnmanager)
 
     def register_assets(self):
         manifest = YAMLLoader(os.path.join(self.project_root,
